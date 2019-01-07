@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<datatypes>
+    <registration>
+        <datatype extension="imgt_archive" type="galaxy.datatypes.binary:CompressedArchive" display_in_upload="True" subclass="True"/>
+    </registration>
+</datatypes>

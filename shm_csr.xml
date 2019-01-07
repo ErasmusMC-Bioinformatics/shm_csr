@@ -1,0 +1,240 @@
+<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.0">
+	<description></description>
+	<requirements>
+		<!--
+		<requirement type="package" version="3.3.2">r-base</requirement>
+		<requirement type="package" version="3.1_3">r-seqinr</requirement>
+		<requirement type="package" version="2.2.0">r-ggplot2</requirement>
+		<requirement type="package" version="1.4.2">r-reshape2</requirement>
+		<requirement type="package" version="0.4.1">r-scales</requirement>
+		<requirement type="package" version="1.10.0">r-data.table</requirement>
+		-->
+	</requirements>
+	<command interpreter="bash">
+		#if str ( $filter_unique.filter_unique_select ) == "remove":
+			wrapper.sh $in_file custom $out_file $out_file.files_path "${in_file.name}" "-" $functionality $unique $naive_output_cond.naive_output $naive_output_ca $naive_output_cg $naive_output_cm $naive_output_ce $naive_output_all $filter_unique.filter_unique_select $filter_unique.filter_unique_clone_count $class_filter_cond.class_filter $empty_region_filter $fast
+		#else:
+			wrapper.sh $in_file custom $out_file $out_file.files_path "${in_file.name}" "-" $functionality $unique $naive_output_cond.naive_output $naive_output_ca $naive_output_cg $naive_output_cm $naive_output_ce $naive_output_all $filter_unique.filter_unique_select 2 $class_filter_cond.class_filter $empty_region_filter $fast
+		#end if
+	</command>
+	<inputs>
+		<param name="in_file" type="data" format="data" label="IMGT zip file to be analysed" />
+		<param name="empty_region_filter" type="select" label="Sequence starts at" help="" >
+			<option value="leader" selected="true">Leader: include FR1, CDR1, FR2, CDR2, FR3 in filters</option>
+			<option value="FR1" selected="true">FR1: include CDR1,FR2,CDR2,FR3 in filters</option>
+			<option value="CDR1">CDR1: include FR2,CDR2,FR3 in filters</option>
+			<option value="FR2">FR2: include CDR2,FR3 in filters</option>
+		</param>
+		<param name="functionality" type="select" label="Functionality filter" help="" >
+			<option value="productive" selected="true">Productive (Productive and Productive see comment)</option>
+			<option value="unproductive">Unproductive (Unproductive and Unproductive see comment)</option>
+			<option value="remove_unknown">Productive and Unproductive (Productive, Productive see comment, Unproductive, Unproductive and Unproductive see comment)</option>
+		</param>
+		<conditional name="filter_unique">
+			<param name="filter_unique_select" type="select" label="Filter unique sequences" help="See below for an example.">
+				<option value="remove" selected="true">Remove uniques (Based on nucleotide sequence + C)</option>
+				<option value="remove_vjaa">Remove uniques (Based on V+J+CDR3 (AA))</option>
+				<option value="keep">Keep uniques (Based on nucleotide sequence + C)</option>
+				<option value="no">No</option>
+			</param>
+			<when value="remove">
+				<param name="filter_unique_clone_count" size="4" type="integer" label="How many sequences should be in a group to keep 1 of them" value="2" min="2"/>
+			</when>
+			<when value="keep"></when>
+			<when value="no"></when>
+		</conditional>
+		<param name="unique" type="select" label="Remove duplicates based on" help="" >
+			<option value="VGene,CDR3.IMGT.AA,best_match_class">Top.V.Gene, CDR3 (AA), C region</option>
+			<option value="VGene,CDR3.IMGT.AA">Top.V.Gene, CDR3 (AA)</option>
+			<option value="CDR3.IMGT.AA,best_match_class">CDR3 (AA), C region</option>
+			<option value="CDR3.IMGT.AA">CDR3 (AA)</option>
+			
+			<option value="VGene,CDR3.IMGT.seq,best_match_class">Top.V.Gene, CDR3 (nt), C region</option>
+			<option value="VGene,CDR3.IMGT.seq">Top.V.Gene, CDR3 (nt)</option>
+			<option value="CDR3.IMGT.seq,best_match_class">CDR3 (nt), C region</option>
+			<option value="CDR3.IMGT.seq">CDR3 (nt)</option>
+			<option value="Sequence.ID" selected="true">Don't remove duplicates</option>
+		</param>
+		<conditional name="class_filter_cond">
+			<param name="class_filter" type="select" label="Human Class/Subclass filter" help="" >
+				<option value="70_70" selected="true">>70% class and >70% subclass</option>
+				<option value="60_55">>60% class and >55% subclass</option>
+				<option value="70_0">>70% class</option>
+				<option value="60_0">>60% class</option>
+				<option value="19_0">>19% class</option>
+				<option value="101_101">Do not assign (sub)class</option>
+			</param>
+			<when value="70_70"></when>
+			<when value="60_55"></when>
+			<when value="70_0"></when>
+			<when value="60_0"></when>
+			<when value="19_0"></when>
+			<when value="101_101"></when>
+		</conditional>
+		<conditional name="naive_output_cond">
+			<param name="naive_output" type="select" label="Output new IMGT archives per class into your history?">
+				<option value="yes">Yes</option>
+				<option value="no" selected="true">No</option>
+			</param>
+			<when value="yes"></when>
+			<when value="no"></when>
+		</conditional>
+		<param name="fast" type="select" label="Fast" help="Skips generating the new ZIP files and Change-O/Baseline" >
+			<option value="yes">Yes</option>
+			<option value="no" selected="true">No</option>
+		</param>
+	</inputs>
+	<outputs>
+		<data format="html" name="out_file" label = "SHM &amp; CSR on ${in_file.name}"/>
+		<data format="imgt_archive" name="naive_output_ca" label = "Filtered IMGT IGA: ${in_file.name}" >
+		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+		</data>
+		<data format="imgt_archive" name="naive_output_cg" label = "Filtered IMGT IGG: ${in_file.name}" >
+		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+		</data>
+		<data format="imgt_archive" name="naive_output_cm" label = "Filtered IMGT IGM: ${in_file.name}" >
+		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+		</data>
+		<data format="imgt_archive" name="naive_output_ce" label = "Filtered IMGT IGE: ${in_file.name}" >
+		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+		</data>
+		<data format="imgt_archive" name="naive_output_all" label = "Filtered IMGT all: ${in_file.name}" >
+		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>class_filter_cond['class_filter'] == "101_101"</filter>
+		</data>
+	</outputs>
+	<tests>
+		<test>
+			<param name="fast" value="yes"/>
+			<output name="out_file" file="test1.html"/>
+		</test>
+	</tests>
+	<help>
+<![CDATA[
+**References**
+
+Yaari, G. and Uduman, M. and Kleinstein, S. H. (2012). Quantifying selection in high-throughput Immunoglobulin sequencing data sets. In *Nucleic Acids Research, 40 (17), pp. e134–e134.* [`doi:10.1093/nar/gks457`_]
+
+.. _doi:10.1093/nar/gks457: http://dx.doi.org/10.1093/nar/gks457
+
+Gupta, Namita T. and Vander Heiden, Jason A. and Uduman, Mohamed and Gadala-Maria, Daniel and Yaari, Gur and Kleinstein, Steven H. (2015). Change-O: a toolkit for analyzing large-scale B cell immunoglobulin repertoire sequencing data: Table 1. *In Bioinformatics, 31 (20), pp. 3356–3358.* [`doi:10.1093/bioinformatics/btv359`_]
+
+.. _doi:10.1093/bioinformatics/btv359: http://dx.doi.org/10.1093/bioinformatics/btv359
+
+-----
+
+**Input files**
+
+IMGT/HighV-QUEST .zip and .txz are accepted as input files. The file to be analysed can be selected using the dropdown menu.
+
+.. class:: infomark
+
+Note: Files can be uploaded by using “get data” and “upload file” and selecting “IMGT archive“ as a file type. Special characters should be prevented in the file names of the uploaded samples as these can give errors when running the immune repertoire pipeline. Underscores are allowed in the file names.
+
+-----
+
+**Sequence starts at**
+
+Identifies the region which will be included in the analysis (analysed region)
+
+- Sequences which are missing a gene region (FR1/CDR1 etc) in the analysed region are excluded. 
+- Sequences containing an ambiguous base in the analysed region or the CDR3 are excluded. 
+- All other filtering/analysis is based on the analysed region.
+
+-----
+
+**Functionality filter**
+
+Allows filtering on productive rearrangements, unproductive rearrangements or both based on the assignment provided by IMGT. 
+
+**Filter unique sequences**
+
+*Remove unique:*
+
+
+This filter consists of two different steps.
+
+Step 1: removes all sequences of which the nucleotide sequence in the “analysed region” and the CDR3 (see sequence starts at filter) occurs only once. (Sub)classes are not taken into account in this filter step.
+
+Step 2: removes all duplicate sequences (sequences with the exact same nucleotide sequence in the analysed region, the CDR3 and the same (sub)class).
+
+.. class:: infomark
+
+This means that sequences with the same nucleotide sequence but a different (sub)class will be included in the results of both (sub)classes.
+
+*Keep unique:*
+
+Removes all duplicate sequences (sequences with the exact same nucleotide sequence in the analysed region and the same (sub)class).
+
+Example of the sequences that are included using either the “remove unique filter” or the “keep unique filter”
+
++--------------------------+
+|       unique filter      |
++--------+--------+--------+
+| values | remove | keep   |
++--------+--------+--------+
+|   A    |   A    |   A    |
++--------+--------+--------+
+|   A    |   B    |   B    |
++--------+--------+--------+
+|   B    |   D    |   C    |
++--------+--------+--------+
+|   B    |        |   D    |
++--------+--------+--------+
+|   C    |        |        |
++--------+--------+--------+
+|   D    |        |        |
++--------+--------+--------+
+|   D    |        |        |
++--------+--------+--------+
+
+-----
+ 
+**Remove duplicates based on**
+
+Allows the selection of a single sequence per clone. Different definitions of a clone can be chosen. 
+
+.. class:: infomark
+
+Note: The first sequence (in the data set) of each clone is always included in the analysis. When the first matched sequence is unmatched (no subclass assigned) the first matched sequence will be included. This means that altering the data order (by for instance sorting) can change the sequence which is included in the analysis and therefore slightly influences the results. 
+
+-----
+
+**Human Class/Subclass filter**
+
+.. class:: warningmark
+
+Note: This filter should only be applied when analysing human IGH data in which a (sub)class specific sequence is present. Otherwise please select the do not assign (sub)class option to prevent errors when running the pipeline. 
+
+The class percentage is based on the ‘chunk hit percentage’ (see below). The subclass percentage is based on the ‘nt hit percentage’ (see below).
+
+The SHM & CSR pipeline identifies human Cµ, Cα, Cγ and Cε constant genes by dividing the reference sequences for the subclasses (NG_001019) in 8 nucleotide chunks which overlap by 4 nucleotides. These overlapping chunks are then individually aligned in the right order to each input sequence. This alignment is used to calculate the chunck hit percentage and the nt hit percentage. 
+
+*Chunk hit percentage*: The percentage of the chunks that is aligned 
+
+*Nt hit percentage*: The percentage of chunks covering the subclass specific nucleotide match with the different subclasses. The most stringent filter for the subclass is 70% ‘nt hit percentage’ which means that 5 out of 7 subclass specific nucleotides for Cα or 6 out of 8 subclass specific nucleotides of Cγ should match with the specific subclass. 
+The option “>25% class” can be chosen when you only are interested in the class (Cα/Cγ/Cµ/Cɛ) of  your sequences and the length of your sequence is not long enough to assign the subclasses.
+
+-----
+
+**Output new IMGT archives per class into your history?**
+
+If yes is selected, additional output files (one for each class) will be added to the history which contain information of the sequences that passed the selected filtering criteria. These files are in the same format as the IMGT/HighV-QUEST output files and therefore are also compatible with many other analysis programs, such as the Immune repertoire pipeline.  
+
+-----
+
+**Execute**
+
+Upon pressing execute a new analysis is added to your history (right side of the page). Initially this analysis will be grey, after initiating the analysis colour of the analysis in the history will change to yellow. When the analysis is finished it will turn green in the history. Now the analysis can be opened by clicking on the eye icon on the analysis of interest. When an analysis turns red an error has occurred when running the analysis. If you click on the analysis title additional information can be found on the analysis. In addition a bug icon appears. Here more information on the error can be found.
+
+]]>
+	</help>
+	<citations>
+		<citation type="doi">10.1093/nar/gks457</citation>
+		<citation type="doi">10.1093/bioinformatics/btv359</citation>
+	</citations>
+</tool>
