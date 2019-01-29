@@ -1,6 +1,7 @@
 <tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.0">
 	<description></description>
 	<requirements>
+		<requirement type="package" version="2.7">python</requirement>
 		<requirement type="package" version="1.16.0">numpy</requirement>
 		<requirement type="package" version="1.2.0">xlrd</requirement>
 		<requirement type="package" version="3.0.0">r-ggplot2</requirement>
