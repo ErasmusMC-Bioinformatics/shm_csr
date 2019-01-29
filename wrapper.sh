@@ -72,7 +72,7 @@ fi
 echo "---------------- class identification ----------------"
 echo "---------------- class identification ----------------<br />" >> $log
 
-python $dir/gene_identification.py --input $PWD/summary.txt --output $outdir/identified_genes.txt
+python2 $dir/gene_identification.py --input $PWD/summary.txt --output $outdir/identified_genes.txt
 
 echo "---------------- merge_and_filter.r ----------------"
 echo "---------------- merge_and_filter.r ----------------<br />" >> $log
@@ -198,7 +198,7 @@ Rscript $dir/plot_pdf.r "$outdir/pdfplots.RData" "$outdir" 2>&1
 echo "---------------- shm_csr.py ----------------"
 echo "---------------- shm_csr.py ----------------<br />" >> $log
 
-python $dir/shm_csr.py --input $outdir/merged.txt --genes $classes --empty_region_filter "${empty_region_filter}" --output $outdir/hotspot_analysis.txt
+python2 $dir/shm_csr.py --input $outdir/merged.txt --genes $classes --empty_region_filter "${empty_region_filter}" --output $outdir/hotspot_analysis.txt
 
 echo "---------------- aa_histogram.r ----------------"
 echo "---------------- aa_histogram.r ----------------<br />" >> $log
