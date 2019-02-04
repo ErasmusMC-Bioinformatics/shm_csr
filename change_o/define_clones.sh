@@ -21,9 +21,7 @@ if [ "bygroup" == "$type" ] ; then
 	output=${10}
 	output2=${11}
 	
-	python3 $dir/DefineClones.py bygroup -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --mode $mode --act $act --model $model --dist $dist --norm $norm --sym $sym --link $link
-	#/data/users/david/anaconda3/bin/python $dir/DefineClones.py bygroup -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --mode $mode --act $act --model $model --dist $dist --norm $norm --sym $sym --link $link
-	#/home/galaxy/anaconda3/bin/python $dir/DefineClones.py bygroup -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --mode $mode --act $act --model $model --dist $dist --norm $norm --sym $sym --link $link
+	DefineClones.py bygroup -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --mode $mode --act $act --model $model --dist $dist --norm $norm --sym $sym --link $link
 	
 	Rscript $dir/define_clones.r $PWD/outdir/output_clone-pass.tab $output2 2>&1
 else
@@ -31,9 +29,7 @@ else
 	output=$4
 	output2=$5
 	
-	python3 $dir/DefineClones.py hclust -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --method $method
-	#/data/users/david/anaconda3/bin/python $dir/DefineClones.py hclust -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --method $method
-	#/home/galaxy/anaconda3/bin/python $dir/DefineClones.py hclust -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --method $method
+	DefineClones.py hclust -d $PWD/input.tab --nproc 4 --outdir $PWD/outdir --outname output --method $method
 	
 	Rscript $dir/define_clones.r $PWD/outdir/output_clone-pass.tab $output2 2>&1
 fi
