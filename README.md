@@ -1,6 +1,7 @@
 # SHM CSR
 
-Somatic hypermutation and class switch recombination pipeline 
+Somatic hypermutation and class switch recombination pipeline.  
+The docker version can be found [here](https://github.com/ErasmusMC-Bioinformatics/ARGalaxy-docker).
 
 # Dependencies
 --------------------
