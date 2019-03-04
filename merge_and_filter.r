@@ -140,9 +140,6 @@ sequences = sequences[,c("Sequence.ID", "FR1.IMGT", "CDR1.IMGT", "FR2.IMGT", "CD
 names(sequences) = c("Sequence.ID", "FR1.IMGT.seq", "CDR1.IMGT.seq", "FR2.IMGT.seq", "CDR2.IMGT.seq", "FR3.IMGT.seq", "CDR3.IMGT.seq")
 result = merge(result, sequences, by="Sequence.ID", all.x=T)
 
-print("sequences files columns")
-print("CDR3.IMGT")
-
 AAs = AAs[,c("Sequence.ID", "CDR3.IMGT")]
 names(AAs) = c("Sequence.ID", "CDR3.IMGT.AA")
 result = merge(result, AAs, by="Sequence.ID", all.x=T)
@@ -216,6 +213,7 @@ for(col in cleanup_columns){
 }
 
 write.table(result, before.unique.file, sep="\t", quote=F,row.names=F,col.names=T)
+
 
 if(filter.unique != "no"){
 	clmns = names(result)
@@ -291,6 +289,9 @@ write.table(x=matched.sequences, file=gsub("merged.txt$", "filtered.txt", output
 
 matched.sequences.count = nrow(matched.sequences)
 unmatched.sequences.count = sum(grepl("^unmatched", result$best_match))
+if(matched.sequences.count <= unmatched.sequences.count){
+	print("WARNING NO MATCHED (SUB)CLASS SEQUENCES!!")
+}
 
 filtering.steps = rbind(filtering.steps, c("Number of matched sequences", matched.sequences.count))
 filtering.steps = rbind(filtering.steps, c("Number of unmatched sequences", unmatched.sequences.count))
