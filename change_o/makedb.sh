@@ -29,7 +29,7 @@ mkdir $PWD/outdir
 
 echo "makedb: $PWD/outdir"
 
-MakeDb.py imgt -i $input --outdir $PWD/outdir --outname output $noparse $scores $regions
+$dir/MakeDb.py imgt -i $input --outdir $PWD/outdir --outname output $noparse $scores $regions
 
 mv $PWD/outdir/output_db-pass.tab $output
 
