@@ -105,7 +105,7 @@ dev.off()
 
 ggsave(plot2.pdf, p)
 
-data3 = dat[c(5, 6, 8, 17:20),]
+data3 = dat[c(5, 6, 8, 18:21),]
 data3 = data3[,names(data3)[grepl("\\.x", names(data3))]]
 names(data3) = gsub(".x", "", names(data3))
 
