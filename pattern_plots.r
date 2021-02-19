@@ -36,8 +36,8 @@ clean.dat = clean.dat[,c(paste(rep(classes, each=3), xyz, sep="."), paste("all",
 
 write.table(clean.dat, clean.output, quote=F, sep="\t", na="", row.names=T, col.names=NA)
 
-dat["RGYW.WRCY",] = colSums(dat[c(13,14),], na.rm=T)
-dat["TW.WA",] = colSums(dat[c(15,16),], na.rm=T)
+dat["RGYW.WRCY",] = colSums(dat[c(14,15),], na.rm=T)
+dat["TW.WA",] = colSums(dat[c(16,17),], na.rm=T)
 
 data1 = dat[c("RGYW.WRCY", "TW.WA"),]
 
