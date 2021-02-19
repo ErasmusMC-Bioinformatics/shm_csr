@@ -70,8 +70,8 @@ def main():
 				fr2Index = linesplt.index("FR2.IMGT")
 				cdr2Index = linesplt.index("CDR2.IMGT")
 				fr3Index = linesplt.index("FR3.IMGT")
-				cdr1LengthIndex = linesplt.index("CDR1.IMGT.seq")
-				cdr2LengthIndex = linesplt.index("CDR2.IMGT.seq")
+				cdr1LengthIndex = linesplt.index("CDR1.IMGT.length")
+				cdr2LengthIndex = linesplt.index("CDR2.IMGT.length")
 				fr1SeqIndex = linesplt.index("FR1.IMGT.seq")
 				fr2SeqIndex = linesplt.index("FR2.IMGT.seq")
 				fr3SeqIndex = linesplt.index("FR3.IMGT.seq")
@@ -107,8 +107,15 @@ def main():
 			mutationList += mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
 			mutationListByID[ID] = mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
 
-			cdr1Length = len(linesplt[cdr1LengthIndex])
-			cdr2Length = len(linesplt[cdr2LengthIndex])
+			try:
+				cdr1Length = int(linesplt[cdr1LengthIndex])
+			except:
+				cdr1Length = 0
+			
+			try:
+				cdr2Length = int(linesplt[cdr2LengthIndex])
+			except:
+				cdr2Length = 0
 
 			#print linesplt[fr2SeqIndex]
 			fr1Length = len(linesplt[fr1SeqIndex]) if empty_region_filter == "leader" else 0
