@@ -1,4 +1,5 @@
 #!/bin/bash
+# something to make it commit, with unix line ends
 dir="$(cd "$(dirname "$0")" && pwd)"
 
 #define_clones.sh $input $noparse $scores $regions $out_file
