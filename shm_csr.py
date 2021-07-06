@@ -331,8 +331,6 @@ def main():
 			o.write("WRCY (%)," + ("0,0,0\n" * len(genes)))
 			o.write("WA (%)," + ("0,0,0\n" * len(genes)))
 			o.write("TW (%)," + ("0,0,0\n" * len(genes)))
-		import sys
-
 		sys.exit()
 
 	hotspotMatcher = re.compile("[actg]+,(\d+)-(\d+)\((.*)\)")
