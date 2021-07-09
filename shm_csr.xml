@@ -6,7 +6,6 @@
 		<!--Biopython should be set at a version at the release of changeo 0.4.4.
 		 Later versions of biopython break changeo 0.4.4 because of the Alphabet deprecation.-->
 		<requirement type="package" version="1.72">biopython</requirement>
-		<requirement type="package" version="1.16.0">numpy</requirement>
 		<requirement type="package" version="1.2.0">xlrd</requirement>
 		<requirement type="package" version="3.0.0">r-ggplot2</requirement>
 		<requirement type="package" version="1.4.3">r-reshape2</requirement>
