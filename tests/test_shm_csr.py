@@ -18,17 +18,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from __future__ import division, print_function
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
-if os.name == 'posix' and sys.version_info[0] < 3:
-    import subprocess32 as subprocess
-    from pathlib2 import Path
-else:
-    import subprocess
-    from pathlib import Path
+from pathlib import Path
 
 import pytest
 
