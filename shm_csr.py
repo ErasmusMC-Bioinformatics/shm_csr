@@ -26,7 +26,7 @@ def main():
 	mutationMatcher = re.compile("^(.)(\d+).(.),?[ ]?(.)?(\d+)?.?(.)?(.?.?.?.?.?)?")
 	mutationMatcher = re.compile("^([actg])(\d+).([actg]),?[ ]?([A-Z])?(\d+)?.?([A-Z])?(.*)?")
 	mutationMatcher = re.compile("^([actg])(\d+).([actg]),?[ ]?([A-Z])?(\d+)?[>]?([A-Z;])?(.*)?")
-	mutationMatcher = re.compile("^([nactg])(\d+).([nactg]),?[ ]?([A-Z])?(\d+)?[>]?([A-Z;])?(.*)?")
+	mutationMatcher = re.compile(r"^([nactg])(\d+).([nactg]),?[ ]?([A-Z*])?(\d+)?[>]?([A-Z;])?(.*)?")
 	NAMatchResult = (None, None, None, None, None, None, '')
 	geneMatchers = {gene: re.compile("^" + gene + ".*") for gene in genes}
 	linecount = 0
