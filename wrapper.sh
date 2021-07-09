@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e -o pipefail
 dir="$(cd "$(dirname "$0")" && pwd)"
 input=$1
 method=$2
