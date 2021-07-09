@@ -1,7 +1,11 @@
 <tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.0">
 	<description></description>
 	<requirements>
-		<requirement type="package" version="2.7">python</requirement>
+		<requirement type="package" version="3.7">python</requirement>
+		<requirement type="package" version="0.4.4">changeo</requirement>
+		<!--Biopython should be set at a version at the release of changeo 0.4.4.
+		 Later versions of biopython break changeo 0.4.4 because of the Alphabet deprecation.-->
+		<requirement type="package" version="1.72">biopython</requirement>
 		<requirement type="package" version="1.16.0">numpy</requirement>
 		<requirement type="package" version="1.2.0">xlrd</requirement>
 		<requirement type="package" version="3.0.0">r-ggplot2</requirement>

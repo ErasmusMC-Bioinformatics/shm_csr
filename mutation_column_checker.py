@@ -20,8 +20,8 @@ with open("7_V-REGION-mutation-and-AA-change-table.txt", 'r') as file_handle:
             try:
                 test = [mutationMatcher.match(x).groups() for x in fr3_data.split("|") if x]
             except:
-                print(line_split[1])
-                print("Something went wrong at line {line} with:".format(line=line_split[0]))
+                print((line_split[1]))
+                print(("Something went wrong at line {line} with:".format(line=line_split[0])))
                 #print([x for x in fr3_data.split("|") if not mutationMatcher.match(x)])
         if i % 100000 == 0:
             print(i)

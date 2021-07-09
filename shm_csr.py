@@ -59,7 +59,7 @@ def main():
 	tandem_sum_by_class = defaultdict(int)
 	expected_tandem_sum_by_class = defaultdict(float)
 
-	with open(infile, 'ru') as i:
+	with open(infile, 'r') as i:
 		for line in i:
 			if first:
 				linesplt = line.split("\t")
@@ -130,10 +130,10 @@ def main():
 			fr3LengthDict[ID] = fr3Length
 
 			IDlist += [ID]
-	print "len(mutationdic) =", len(mutationdic)
+	print("len(mutationdic) =", len(mutationdic))
 
 	with open(os.path.join(os.path.dirname(os.path.abspath(infile)), "mutationdict.txt"), 'w') as out_handle:
-		for ID, lst in mutationdic.iteritems():
+		for ID, lst in mutationdic.items():
 			for mut in lst:
 				out_handle.write("{0}\t{1}\n".format(ID, "\t".join([str(x) for x in mut])))
 
@@ -230,7 +230,7 @@ def main():
 
 	tandem_freq_file = os.path.join(os.path.dirname(outfile), "tandem_frequency.txt")
 	with open(tandem_freq_file, 'w') as o:
-		for frq in sorted([int(x) for x in tandem_frequency.keys()]):
+		for frq in sorted([int(x) for x in list(tandem_frequency.keys())]):
 			o.write("{0}\t{1}\n".format(frq, tandem_frequency[str(frq)]))
 
 	tandem_row = []
@@ -256,11 +256,11 @@ def main():
 	AA_mutation_dic = {"IGA": AA_mutation[:], "IGG": AA_mutation[:], "IGM": AA_mutation[:], "IGE": AA_mutation[:], "unm": AA_mutation[:], "all": AA_mutation[:]}
 	AA_mutation_empty = AA_mutation[:]
 
-	print "AALength:", AALength
+	print("AALength:", AALength)
 	aa_mutations_by_id_file = outfile[:outfile.rindex("/")] + "/aa_id_mutations.txt"
 	with open(aa_mutations_by_id_file, 'w') as o:
 		o.write("ID\tbest_match\t" + "\t".join([str(x) for x in range(1,AALength)]) + "\n")
-		for ID in mutationListByID.keys():
+		for ID in list(mutationListByID.keys()):
 			AA_mutation_for_ID = AA_mutation_empty[:]
 			for mutation in mutationListByID[ID]:
 				if mutation[4] and mutation[5] != ";":
@@ -269,8 +269,8 @@ def main():
 						AA_mutation[AA_mutation_position] += 1
 						AA_mutation_for_ID[AA_mutation_position] += 1
 					except Exception as e:
-						print e
-						print mutation
+						print(e)
+						print(mutation)
 						sys.exit()
 					clss = genedic[ID][:3]
 					AA_mutation_dic[clss][AA_mutation_position] += 1
@@ -280,32 +280,32 @@ def main():
 
 	#absent AA stuff
 	absentAACDR1Dic = defaultdict(list)
-	absentAACDR1Dic[5] = range(29,36)
-	absentAACDR1Dic[6] = range(29,35)
-	absentAACDR1Dic[7] = range(30,35)
-	absentAACDR1Dic[8] = range(30,34)
-	absentAACDR1Dic[9] = range(31,34)
-	absentAACDR1Dic[10] = range(31,33)
+	absentAACDR1Dic[5] = list(range(29,36))
+	absentAACDR1Dic[6] = list(range(29,35))
+	absentAACDR1Dic[7] = list(range(30,35))
+	absentAACDR1Dic[8] = list(range(30,34))
+	absentAACDR1Dic[9] = list(range(31,34))
+	absentAACDR1Dic[10] = list(range(31,33))
 	absentAACDR1Dic[11] = [32]
 
 	absentAACDR2Dic = defaultdict(list)
-	absentAACDR2Dic[0] = range(55,65)
-	absentAACDR2Dic[1] = range(56,65)
-	absentAACDR2Dic[2] = range(56,64)
-	absentAACDR2Dic[3] = range(57,64)
-	absentAACDR2Dic[4] = range(57,63)
-	absentAACDR2Dic[5] = range(58,63)
-	absentAACDR2Dic[6] = range(58,62)
-	absentAACDR2Dic[7] = range(59,62)
-	absentAACDR2Dic[8] = range(59,61)
+	absentAACDR2Dic[0] = list(range(55,65))
+	absentAACDR2Dic[1] = list(range(56,65))
+	absentAACDR2Dic[2] = list(range(56,64))
+	absentAACDR2Dic[3] = list(range(57,64))
+	absentAACDR2Dic[4] = list(range(57,63))
+	absentAACDR2Dic[5] = list(range(58,63))
+	absentAACDR2Dic[6] = list(range(58,62))
+	absentAACDR2Dic[7] = list(range(59,62))
+	absentAACDR2Dic[8] = list(range(59,61))
 	absentAACDR2Dic[9] = [60]
 
 	absentAA = [len(IDlist)] * (AALength-1)
-	for k, cdr1Length in cdr1LengthDic.iteritems():
+	for k, cdr1Length in cdr1LengthDic.items():
 		for c in absentAACDR1Dic[cdr1Length]:
 			absentAA[c] -= 1
 
-	for k, cdr2Length in cdr2LengthDic.iteritems():
+	for k, cdr2Length in cdr2LengthDic.items():
 		for c in absentAACDR2Dic[cdr2Length]:
 			absentAA[c] -= 1
 
@@ -325,7 +325,7 @@ def main():
 			o.write(ID + "\t" + str(cdr1Length) + "\t" + str(cdr2Length) + "\t" + genedic[ID] + "\t" + "\t".join([str(x) for x in absentAAbyID]) + "\n")
 
 	if linecount == 0:
-		print "No data, exiting"
+		print("No data, exiting")
 		with open(outfile, 'w') as o:
 			o.write("RGYW (%)," + ("0,0,0\n" * len(genes)))
 			o.write("WRCY (%)," + ("0,0,0\n" * len(genes)))
@@ -345,7 +345,7 @@ def main():
 	aggctatIndex = 0
 	atagcctIndex = 0
 	first = True
-	with open(infile, 'ru') as i:
+	with open(infile, 'r') as i:
 		for line in i:
 			if first:
 				linesplt = line.split("\t")
@@ -410,7 +410,7 @@ def main():
 				motif_dic = {"RGYW": RGYW, "WRCY": WRCY, "WA": WA, "TW": TW}
 				for mutation in mutationList:
 					frm, where, to, AAfrm, AAwhere, AAto, junk = mutation
-					for motif in motif_dic.keys():
+					for motif in list(motif_dic.keys()):
 							
 						for start, end, region in motif_dic[motif]:
 							if start <= int(where) <= end:
@@ -458,7 +458,7 @@ def main():
 	value = 0
 	valuedic = dict()
 
-	for fname in funcs.keys():
+	for fname in list(funcs.keys()):
 		for gene in genes:
 			with open(directory + gene + "_" + fname + "_value.txt", 'r') as v:
 				valuedic[gene + "_" + fname] = float(v.readlines()[0].rstrip())
@@ -475,7 +475,7 @@ def main():
 	dic = {"RGYW": RGYWCount, "WRCY": WRCYCount, "WA": WACount, "TW": TWCount}
 	arr = ["RGYW", "WRCY", "WA", "TW"]
 
-	for fname in funcs.keys():
+	for fname in list(funcs.keys()):
 		func = funcs[fname]
 		foutfile = outfile[:outfile.rindex("/")] + "/hotspot_analysis_" + fname + ".txt"
 		with open(foutfile, 'w') as o:
@@ -487,9 +487,9 @@ def main():
 					if valuedic[gene + "_" + fname] is 0:
 						o.write(",0,0,0")
 					else:
-						x, y, z = get_xyz([curr[x] for x in [y for y, z in genedic.iteritems() if geneMatcher.match(z)]], gene, func, fname)
+						x, y, z = get_xyz([curr[x] for x in [y for y, z in genedic.items() if geneMatcher.match(z)]], gene, func, fname)
 						o.write("," + x + "," + y + "," + z)
-				x, y, z = get_xyz([y for x, y in curr.iteritems() if not genedic[x].startswith("unmatched")], "total", func, fname)
+				x, y, z = get_xyz([y for x, y in curr.items() if not genedic[x].startswith("unmatched")], "total", func, fname)
 				#x, y, z = get_xyz([y for x, y in curr.iteritems()], "total", func, fname)
 				o.write("," + x + "," + y + "," + z + "\n")
 

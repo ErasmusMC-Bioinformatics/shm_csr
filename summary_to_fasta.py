@@ -37,6 +37,6 @@ with open(infile, 'r') as i, open(fasta, 'w') as o:
 		o.write(">" + ID + "\n" + seq + "\n")
 		passed += 1
 			
-	print "No results:", no_results
-	print "No sequences:", no_seqs
-	print "Written to fasta file:", passed
+	print("No results:", no_results)
+	print("No sequences:", no_seqs)
+	print("Written to fasta file:", passed)
