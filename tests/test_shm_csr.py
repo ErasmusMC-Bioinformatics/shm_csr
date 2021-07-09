@@ -36,6 +36,8 @@ GIT_ROOT = str(Path(__file__).parent.parent.absolute())
 TEST_DIR = Path(__file__).parent
 TEST_DATA_DIR = TEST_DIR / "data"
 CONTROL_NWK377_PB_IGHC_MID1_40nt_2 = TEST_DATA_DIR / "CONTROL_NWK377_PB_IGHC_MID1_40nt_2.txz"
+
+
 @pytest.fixture(scope="module")
 def shm_csr_result():
     temp_dir = tempfile.mktemp()
@@ -89,4 +91,3 @@ def shm_csr_result():
 
 def test_check_output(shm_csr_result):
     assert os.path.exists(shm_csr_result)
-    assert False

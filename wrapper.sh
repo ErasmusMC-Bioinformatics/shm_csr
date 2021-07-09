@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -e
+set -e
 dir="$(cd "$(dirname "$0")" && pwd)"
 input=$1
 method=$2
@@ -22,7 +22,7 @@ class_filter=${17}
 empty_region_filter=${18}
 fast=${19}
 
-mkdir $outdir
+mkdir -p $outdir
 
 tar -xzf $dir/style.tar.gz -C $outdir
 
@@ -447,7 +447,7 @@ if [[ "$fast" == "no" ]] ; then
 	echo "---------------- baseline ----------------<br />" >> $log
 	tmp="$PWD"
 
-	mkdir $outdir/baseline
+	mkdir -p $outdir/baseline
 	
 	echo "<center><h1>BASELINe</h1>" >> $output
 	header_substring="Based on CDR1, FR2, CDR2, FR3 (27:27:38:55:65:104:-)"
@@ -557,7 +557,7 @@ if [[ "$fast" == "no" ]] ; then
 
 	echo "---------------- change-o MakeDB ----------------"
 
-	mkdir $outdir/change_o
+	mkdir -p $outdir/change_o
 
 	tmp="$PWD"
 
