@@ -34,7 +34,7 @@ with xlrd.open_workbook(args.input, 'r') as wb:
 	with open(args.output, 'a') as o:
 		for sheet in wb.sheets():
 			if sheet.cell(1,gene_column).value.find("IGHV") < 0:
-				print "Genes not in column " + LETTERS[gene_column] + ", skipping sheet " + sheet.name
+				print("Genes not in column " + LETTERS[gene_column] + ", skipping sheet " + sheet.name)
 				continue
 			o.write(">>>" + sheet.name + "\n")
 			outputdic = dict()
@@ -46,7 +46,7 @@ with xlrd.open_workbook(args.input, 'r') as wb:
 					outputdic[ref] = [(sheet.cell(rowindex, id_column).value.replace(">", ""), sheet.cell(rowindex, seq_column).value)]
 			#print outputdic
 			
-			for k in outputdic.keys():
+			for k in list(outputdic.keys()):
 				if k in refdic:
 					o.write(">>" + k + "\n")
 					o.write(refdic[k] + "\n")
@@ -55,4 +55,4 @@ with xlrd.open_workbook(args.input, 'r') as wb:
 						o.write(">" + seq[0] + "\n")
 						o.write(seq[1] + "\n")
 				else:
-					print k + " not in reference, skipping " + k
+					print(k + " not in reference, skipping " + k)

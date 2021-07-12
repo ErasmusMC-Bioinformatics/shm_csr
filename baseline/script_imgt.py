@@ -10,11 +10,11 @@ parser.add_argument("--id", help="ID to be used at the '>>>' line in the output"
 
 args = parser.parse_args()
 
-print "script_imgt.py"
-print "input:", args.input
-print "ref:", args.ref
-print "output:", args.output
-print "id:", args.id
+print("script_imgt.py")
+print("input:", args.input)
+print("ref:", args.ref)
+print("output:", args.output)
+print("id:", args.id)
 
 refdic = dict()
 with open(args.ref, 'rU') as ref:
@@ -30,7 +30,7 @@ with open(args.ref, 'rU') as ref:
 			currentSeq += line.rstrip()
 	refdic[currentId[1:]] = currentSeq
 
-print "Have", str(len(refdic)), "reference sequences"
+print("Have", str(len(refdic)), "reference sequences")
 
 vPattern = [r"(IGHV[0-9]-[0-9ab]+-?[0-9]?D?\*\d{1,2})"]#,
 #						r"(TRBV[0-9]{1,2}-?[0-9]?-?[123]?)",
@@ -74,7 +74,7 @@ with open(args.input, 'r') as i:
 				outputdic[ref] = [(linesplt[0].replace(">", ""), linesplt[2].replace(">", "").rstrip())]
 		#print outputdic
 		
-		for k in outputdic.keys():
+		for k in list(outputdic.keys()):
 			if k in refdic:
 				o.write(">>" + k + "\n")
 				o.write(refdic[k] + "\n")
@@ -83,4 +83,4 @@ with open(args.input, 'r') as i:
 					o.write(">" + seq[0] + "\n")
 					o.write(seq[1] + "\n")
 			else:
-				print k + " not in reference, skipping " + k
+				print(k + " not in reference, skipping " + k)
