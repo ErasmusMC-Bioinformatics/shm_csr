@@ -38,8 +38,8 @@ def shm_csr_result():
     temp_dir = tempfile.mktemp()
     shutil.copytree(GIT_ROOT, temp_dir)
     input = str(CONTROL_NWK377_PB_IGHC_MID1_40nt_2)
-    out_file = os.path.join(temp_dir, "result.html")
-    out_files_path = temp_dir
+    out_files_path = os.path.join(temp_dir, "results")
+    out_file = os.path.join(out_files_path, "result.html")
     infile_name = "input_data"
     functionality = "productive"
     unique = "Sequence.ID"
