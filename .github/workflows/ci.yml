@@ -22,6 +22,8 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2.0.1 # https://github.com/conda-incubator/setup-miniconda.
         with:
           environment-file: conda_environment.yml
+          channels: conda-forge,bioconda,defaults
           channel-priority: strict
+          activate-environment: shm_csr
       - name: Run test.
         run: pytest tests/
