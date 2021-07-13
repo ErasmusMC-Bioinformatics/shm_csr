@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e -o pipefail
 dir="$(cd "$(dirname "$0")" && pwd)"
 input=$1
@@ -22,7 +22,7 @@ class_filter=${17}
 empty_region_filter=${18}
 fast=${19}
 
-if [ -z "${DEBUG + x}" ]
+if [ -z "${DEBUG+x}" ]
 then
   exec 5> debug_output.txt
   BASH_XTRACEFD="5"
