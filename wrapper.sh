@@ -24,7 +24,7 @@ fast=${19}
 
 #exec 5> debug_output.txt
 #BASH_XTRACEFD="5"
-#PS4='\t $LINENO: '
+#PS4='$(date +%s.%N) $LINENO: '
 #set -x
 
 mkdir -p $outdir
