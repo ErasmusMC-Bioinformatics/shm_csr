@@ -22,13 +22,10 @@ class_filter=${17}
 empty_region_filter=${18}
 fast=${19}
 
-if [ -z "${DEBUG+x}" ]
-then
-  exec 5> debug_output.txt
-  BASH_XTRACEFD="5"
-  PS4='\t $LINENO: '
-  set -x
-fi
+#exec 5> debug_output.txt
+#BASH_XTRACEFD="5"
+#PS4='\t $LINENO: '
+#set -x
 
 mkdir -p $outdir
 
