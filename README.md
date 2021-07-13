@@ -5,7 +5,7 @@ The docker version can be found [here](https://github.com/ErasmusMC-Bioinformati
 
 # Dependencies
 --------------------
-[Python 2.7](https://www.python.org/)  
+[Python 3.7](https://www.python.org/)  
 [Change-O](https://changeo.readthedocs.io/en/version-0.4.4/)  
 [Baseline](http://selection.med.yale.edu/baseline/)  
 [R data.table](https://cran.r-project.org/web/packages/data.table/data.table.pdf)
