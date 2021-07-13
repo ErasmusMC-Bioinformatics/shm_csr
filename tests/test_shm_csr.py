@@ -79,10 +79,11 @@ def shm_csr_result():
     ]
     subprocess.run(cmd, cwd=temp_dir, stdout=sys.stdout, stderr=sys.stderr,
                    check=True)
-    yield temp_dir
+    yield Path(out_files_path)
     print(temp_dir, file=sys.stderr)
-    #shutil.rmtree(temp_dir)
+    if os.getenv("DEBUG") is not None:
+        shutil.rmtree(temp_dir)
 
 
 def test_check_output(shm_csr_result):
-    assert os.path.exists(shm_csr_result)
+    assert shm_csr_result.exists()
