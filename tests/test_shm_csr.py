@@ -52,7 +52,7 @@ def shm_csr_result():
     filter_unique = "remove"
     filter_unique_count = '2'
     class_filter = '70_70'
-    empty_region_filter = 'leader'
+    empty_region_filter = 'FR1'
     fast = 'no'
     cmd = [
         "bash",
