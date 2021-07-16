@@ -88,13 +88,18 @@ def test_check_output(shm_csr_result):
     assert shm_csr_result.exists()
 
 
-@pytest.mark.parametrize("filename", [
-    "aa_histogram_sum.txt",
-    "aa_histogram_sum_IGA.txt",
-    "aa_histogram_sum_IGG.txt",
-])
-def test_aa_histogram_sum(shm_csr_result, filename):
+@pytest.mark.parametrize("filename", os.listdir(VALIDATION_DATA_DIR))
+def test_results_match_validation(shm_csr_result, filename):
     with open(Path(shm_csr_result, filename)) as result_h:
         with open(Path(VALIDATION_DATA_DIR, filename)) as validate_h:
+            for line in result_h:
+                assert line == validate_h.readline()
+
+
+def test_nt_overview(shm_csr_result):
+    with open(Path(shm_csr_result, "sequence_overview", "ntoverview.txt")
+              ) as result_h:
+        with open(Path(TEST_DIR, "sequence_overview", "ntoverview.txt")
+                  ) as validate_h:
             for line in result_h:
                 assert line == validate_h.readline()
