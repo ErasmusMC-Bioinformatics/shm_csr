@@ -90,6 +90,8 @@ def test_check_output(shm_csr_result):
 
 @pytest.mark.parametrize("filename", [
     "aa_histogram_sum.txt",
+    "aa_histogram_sum_IGA.txt",
+    "aa_histogram_sum_IGG.txt",
 ])
 def test_aa_histogram_sum(shm_csr_result, filename):
     with open(Path(shm_csr_result, filename)) as result_h:
