@@ -1,0 +1,37 @@
+Class	Type	value
+IGA	A/T	42.7
+IGA1	A/T	42.3
+IGA2	A/T	43.6
+IGG	A/T	43.9
+IGG1	A/T	43.7
+IGG2	A/T	43.6
+IGG3	A/T	47.9
+IGG4	A/T	46.2
+IGM	A/T	0
+IGE	A/T	0
+un	A/T	43.5
+all	A/T	43.1
+IGA	G/C transitions	33
+IGA1	G/C transitions	33.6
+IGA2	G/C transitions	31.7
+IGG	G/C transitions	31.4
+IGG1	G/C transitions	31.6
+IGG2	G/C transitions	31.9
+IGG3	G/C transitions	28.9
+IGG4	G/C transitions	27.2
+IGM	G/C transitions	0
+IGE	G/C transitions	0
+un	G/C transitions	31.9
+all	G/C transitions	32.5
+IGA	G/C transversions	24.3
+IGA1	G/C transversions	24.1
+IGA2	G/C transversions	24.7
+IGG	G/C transversions	24.7
+IGG1	G/C transversions	24.7
+IGG2	G/C transversions	24.6
+IGG3	G/C transversions	23.2
+IGG4	G/C transversions	26.6
+IGM	G/C transversions	0
+IGE	G/C transversions	0
+un	G/C transversions	24.6
+all	G/C transversions	24.4
