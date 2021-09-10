@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e -o pipefail
 dir="$(cd "$(dirname "$0")" && pwd)"
 input=$1
@@ -21,6 +21,11 @@ filter_unique_count=${16}
 class_filter=${17}
 empty_region_filter=${18}
 fast=${19}
+
+#exec 5> debug_output.txt
+#BASH_XTRACEFD="5"
+#PS4='$(date +%s.%N) $LINENO: '
+#set -x
 
 mkdir -p $outdir
 

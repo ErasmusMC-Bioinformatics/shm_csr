@@ -1,0 +1,3 @@
+Gene	Freq	label
+IGA1	593	IGA1 - 593
+IGA2	324	IGA2 - 324

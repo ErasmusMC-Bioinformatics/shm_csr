@@ -1,0 +1,16 @@
+best_match_class	frequency_bins	frequency_count	class_sum	frequency
+IGA	0 or lower	2	917	0.22
+IGA	0 to 2	12	917	1.31
+IGA	2 to 5	111	917	12.1
+IGA	5 to 10	453	917	49.4
+IGA	10 to 15	264	917	28.79
+IGA	15 to 20	60	917	6.54
+IGA	20 or higher	15	917	1.64
+IGG	0 or lower	18	469	3.84
+IGG	0 to 2	5	469	1.07
+IGG	2 to 5	34	469	7.25
+IGG	5 to 10	245	469	52.24
+IGG	10 to 15	120	469	25.59
+IGG	15 to 20	41	469	8.74
+IGG	20 or higher	6	469	1.28
+IGM	0 or lower	1	1	100

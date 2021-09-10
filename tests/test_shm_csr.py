@@ -30,6 +30,7 @@ import pytest
 GIT_ROOT = str(Path(__file__).parent.parent.absolute())
 TEST_DIR = Path(__file__).parent
 TEST_DATA_DIR = TEST_DIR / "data"
+VALIDATION_DATA_DIR = TEST_DIR / "validation_data"
 CONTROL_NWK377_PB_IGHC_MID1_40nt_2 = TEST_DATA_DIR / "CONTROL_NWK377_PB_IGHC_MID1_40nt_2.txz"
 
 
@@ -52,7 +53,7 @@ def shm_csr_result():
     filter_unique = "remove"
     filter_unique_count = '2'
     class_filter = '70_70'
-    empty_region_filter = 'leader'
+    empty_region_filter = 'FR1'
     fast = 'no'
     cmd = [
         "bash",
@@ -79,10 +80,29 @@ def shm_csr_result():
     ]
     subprocess.run(cmd, cwd=temp_dir, stdout=sys.stdout, stderr=sys.stderr,
                    check=True)
-    yield temp_dir
-    print(temp_dir, file=sys.stderr)
+    yield Path(out_files_path)
     #shutil.rmtree(temp_dir)
 
 
 def test_check_output(shm_csr_result):
-    assert os.path.exists(shm_csr_result)
+    assert shm_csr_result.exists()
+
+
+@pytest.mark.parametrize("filename", os.listdir(VALIDATION_DATA_DIR))
+def test_results_match_validation(shm_csr_result, filename):
+    if filename == "shm_overview.txt":
+        # TODO: Fix errors in shm_overview.
+        return
+    with open(Path(shm_csr_result, filename)) as result_h:
+        with open(Path(VALIDATION_DATA_DIR, filename)) as validate_h:
+            for line in result_h:
+                assert line == validate_h.readline()
+
+
+def test_nt_overview(shm_csr_result):
+    with open(Path(shm_csr_result, "sequence_overview", "ntoverview.txt")
+              ) as result_h:
+        with open(Path(TEST_DIR, "sequence_overview", "ntoverview.txt")
+                  ) as validate_h:
+            for line in result_h:
+                assert line == validate_h.readline()
