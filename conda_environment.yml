@@ -19,3 +19,5 @@ dependencies:
   - file=5.39
   # Test dependencies below
   - pytest
+  # Add planemo so tool can be uploaded
+  - planemo
