@@ -892,6 +892,9 @@ echo "</center></html>" >> $log
 
 IFS="$tIFS"
 
+rm -r results/baseline
+rm -r files
+xargs rm < remove_files.txt
 
 echo "---------------- Done! ----------------"
 echo "---------------- Done! ----------------<br />" >> $outdir/log.html
