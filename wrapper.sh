@@ -892,27 +892,20 @@ echo "</center></html>" >> $log
 
 IFS="$tIFS"
 
-rm -r results/baseline
-rm -r files
-xargs rm < remove_files.txt
+echo "---------------- remove_files----------------"
+echo "---------------- remove_files----------------<br />" >> $log
+
+rm -r -v results/baseline
+rm -r -v files
+filename='remove_files.txt'
+
+while read file; do
+    rm -v $file
+done < "$filename"
+
 
 echo "---------------- Done! ----------------"
 echo "---------------- Done! ----------------<br />" >> $outdir/log.html
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

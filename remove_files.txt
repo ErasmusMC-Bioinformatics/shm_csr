@@ -21,8 +21,6 @@ results/before_filters.txt
 results/before_unique_filter.txt
 results/data_sum.txt
 results/filtering_steps.txt
-results/frequency_ranges_classes.txt
-results/frequency_ranges_subclasses.txt
 results/hotspot_analysis_mean.txt
 results/hotspot_analysis_median.txt
 results/hotspot_analysis_sum.txt
@@ -118,7 +116,6 @@ results/mutations_mean.txt
 results/mutations_median.txt
 results/mutations_sum.txt
 results/RGYW.txt
-results/scatter.txt
 results/shm_overview_tandem_row.txt
 results/tandem_frequency.txt
 results/transitions_all_mean.txt
