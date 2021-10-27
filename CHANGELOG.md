@@ -1,3 +1,8 @@
+version 1.2.0
+-------------
++ Add a container in which the tool can execute.
++ Remove redundant files after execution.
+
 version 1.1.0
 -------------
 + Added changeo as a dependency. Porting to python3 was necessary to achieve 
