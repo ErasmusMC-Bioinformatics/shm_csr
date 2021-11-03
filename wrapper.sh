@@ -895,12 +895,12 @@ IFS="$tIFS"
 echo "---------------- remove_files----------------"
 echo "---------------- remove_files----------------<br />" >> $log
 
-rm -r -v results/baseline
-rm -r -v files
+rm -r -v -f results/baseline
+rm -r -v -f files
 filename='remove_files.txt'
 
 while read file; do
-    rm -v $file
+    rm -v -f $file
 done < "$filename"
 
 
