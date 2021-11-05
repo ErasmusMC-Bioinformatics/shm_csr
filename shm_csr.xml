@@ -16,6 +16,8 @@
 		<requirement type="package" version="4.4.18">bash</requirement>
 		<requirement type="package" version="1.34">tar</requirement>
 		<requirement type="package" version="5.39">file</requirement>
+		<requirement type="package" version="4.6.0">findutils</requirement>
+		<requirement type="package" version="1.07.1">bc</requirement>
 	</requirements>
 	<command interpreter="bash">
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
