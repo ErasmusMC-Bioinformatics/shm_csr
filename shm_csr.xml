@@ -1,4 +1,4 @@
-<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.2">
+<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.2.2">
 	<description></description>
 	<requirements>
 		<requirement type="package" version="3.7.1">python</requirement>
@@ -16,7 +16,6 @@
 		<requirement type="package" version="4.4.18">bash</requirement>
 		<requirement type="package" version="1.34">tar</requirement>
 		<requirement type="package" version="5.39">file</requirement>
-		<container type="docker">quay.io/rhpvorderman/mulled-v2-a2524529ff4c0254c944ff4606e926ca2e8b80d0:9fa3e7fda79c80bf1af596872bddd871913a2c1c-0</container>
 	</requirements>
 	<command interpreter="bash">
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
