@@ -36,11 +36,17 @@ CONTROL_NWK377_PB_IGHC_MID1_40nt_2 = TEST_DATA_DIR / "CONTROL_NWK377_PB_IGHC_MID
 
 @pytest.fixture(scope="module")
 def shm_csr_result():
-    temp_dir = tempfile.mktemp()
-    shutil.copytree(GIT_ROOT, temp_dir)
+    temp_dir = Path(tempfile.mkdtemp())
+    tool_dir = temp_dir / "shm_csr"
+    shutil.copytree(GIT_ROOT, tool_dir)
+    working_dir = temp_dir / "working"
+    working_dir.mkdir(parents=True)
+    output_dir = temp_dir / "outputs"
+    output_dir.mkdir(parents=True)
+    wrapper = str(tool_dir / "wrapper.sh")
     input = str(CONTROL_NWK377_PB_IGHC_MID1_40nt_2)
-    out_files_path = os.path.join(temp_dir, "results")
-    out_file = os.path.join(out_files_path, "result.html")
+    out_files_path = output_dir / "results"
+    out_file = out_files_path / "result.html"
     infile_name = "input_data"
     functionality = "productive"
     unique = "Sequence.ID"
@@ -57,11 +63,11 @@ def shm_csr_result():
     fast = 'no'
     cmd = [
         "bash",
-        "wrapper.sh",
+        wrapper,
         input,
         "custom",
-        out_file,
-        out_files_path,
+        str(out_file),
+        str(out_files_path),
         infile_name,
         "-",
         functionality,
@@ -78,8 +84,10 @@ def shm_csr_result():
         empty_region_filter,
         fast
     ]
-    subprocess.run(cmd, cwd=temp_dir, stdout=sys.stdout, stderr=sys.stderr,
-                   check=True)
+    with open(temp_dir / "stderr", "wt") as stderr_file:
+        with open(temp_dir / "stdout", "wt") as stdout_file:
+            subprocess.run(cmd, cwd=working_dir, stdout=stdout_file,
+                           stderr=stderr_file, check=True)
     yield Path(out_files_path)
     #shutil.rmtree(temp_dir)
 
