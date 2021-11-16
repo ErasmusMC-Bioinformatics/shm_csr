@@ -7,23 +7,14 @@ on:
       - develop
       - master
 
-defaults:
-  run:
-    # This is needed for miniconda, see:
-    # https://github.com/marketplace/actions/setup-miniconda#important.
-    shell: bash -l {0}
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4 # https://github.com/actions/checkout.
-      - name: Install miniconda.
-        uses: conda-incubator/setup-miniconda@v2.0.1 # https://github.com/conda-incubator/setup-miniconda.
-        with:
-          environment-file: conda_environment.yml
-          channels: conda-forge,bioconda,defaults
-          channel-priority: strict
-          activate-environment: shm_csr
+      - uses: actions/checkout@v2.3.4
+      - name: Set up Python
+        uses: actions/setup-python@v2.2.1
+      - name: Install pytest
+        run: pip install pytest
       - name: Run test.
         run: pytest tests/
