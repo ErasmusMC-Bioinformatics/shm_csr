@@ -5,7 +5,7 @@ import sys
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
-DEFAULT_BASE_IMAGE = "bgruening/busybox-bash:0.2"
+DEFAULT_BASE_IMAGE = "bgruening/busybox-bash:0.1"
 def main():
     try:
         base_image = sys.argv[1]
