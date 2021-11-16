@@ -24,14 +24,23 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from xml.etree import ElementTree
+from xml.etree.ElementTree import Element
 
 import pytest
 
-GIT_ROOT = str(Path(__file__).parent.parent.absolute())
+GIT_ROOT = Path(__file__).parent.parent.absolute()
 TEST_DIR = Path(__file__).parent
 TEST_DATA_DIR = TEST_DIR / "data"
 VALIDATION_DATA_DIR = TEST_DIR / "validation_data"
 CONTROL_NWK377_PB_IGHC_MID1_40nt_2 = TEST_DATA_DIR / "CONTROL_NWK377_PB_IGHC_MID1_40nt_2.txz"
+
+
+def get_container():
+    tool = ElementTree.parse(GIT_ROOT / "shm_csr.xml").getroot()
+    requirements: Element = tool.find("requirements")
+    container = requirements.find("container")
+    return container.text
 
 
 @pytest.fixture(scope="module")
@@ -84,12 +93,15 @@ def shm_csr_result():
         empty_region_filter,
         fast
     ]
+    docker_cmd = ["docker", "run", "-v", f"{temp_dir}:{temp_dir}",
+                  "-v", f"{input}:{input}",
+                  "-w", str(working_dir),
+                  get_container()] + cmd
     with open(temp_dir / "stderr", "wt") as stderr_file:
         with open(temp_dir / "stdout", "wt") as stdout_file:
-            subprocess.run(cmd, cwd=working_dir, stdout=stdout_file,
+            subprocess.run(docker_cmd, cwd=working_dir, stdout=stdout_file,
                            stderr=stderr_file, check=True)
     yield Path(out_files_path)
-    #shutil.rmtree(temp_dir)
 
 
 def test_check_output(shm_csr_result):
