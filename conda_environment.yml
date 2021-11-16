@@ -19,6 +19,7 @@ dependencies:
   - file=5.39
   - bc=1.07.1
   - findutils=4.6.0
+  - font-ttf-ubuntu=0.83
   # Test dependencies below
   - pytest=6.2.5
   # Add planemo so tool can be uploaded

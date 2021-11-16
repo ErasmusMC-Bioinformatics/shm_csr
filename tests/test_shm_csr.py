@@ -36,7 +36,7 @@ CONTROL_NWK377_PB_IGHC_MID1_40nt_2 = TEST_DATA_DIR / "CONTROL_NWK377_PB_IGHC_MID
 
 @pytest.fixture(scope="module")
 def shm_csr_result():
-    docker_container = "quay.io/rhpvorderman/mulled-v2-48499306f4255181b093c1e33eaccf2bd03e52fb:19e4d20cdfbc77083f57f878603bee37abb3db87-0"
+    docker_container = "quay.io/rhpvorderman/mulled-v2-f7d31c9d7424063a492fc0e5ecbf89bc757c0107:2b50bdd4d8c1fefc6ec24b0753fad0dcecec843b-0"
     temp_dir = Path(tempfile.mkdtemp())
     tool_dir = temp_dir / "shm_csr"
     shutil.copytree(GIT_ROOT, tool_dir)

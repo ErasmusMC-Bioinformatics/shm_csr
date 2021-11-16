@@ -18,6 +18,8 @@
 		<requirement type="package" version="5.39">file</requirement>
 		<requirement type="package" version="4.6.0">findutils</requirement>
 		<requirement type="package" version="1.07.1">bc</requirement>
+		<requirement type="package" version="0.83">font-ttf-ubuntu</requirement>
+		<container type="docker">quay.io/rhpvorderman/mulled-v2-f7d31c9d7424063a492fc0e5ecbf89bc757c0107:2b50bdd4d8c1fefc6ec24b0753fad0dcecec843b-0</container>
 	</requirements>
 	<command interpreter="bash">
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
