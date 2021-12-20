@@ -44,6 +44,22 @@ class Mutation(typing.NamedTuple):
 		return cls(frm, where, to, frmAA, whereAA, toAA, thing)
 
 
+class Hotspot(typing.NamedTuple):
+	start: int
+	end: int
+	region: str
+
+	@classmethod
+	def from_string(cls, string):
+		# Example: aa,40-41(FR1)
+		sequence, rest = string.split(',')  # type: str, str
+		brace_pos = rest.index('(')
+		numbers = rest[:brace_pos]
+		start, end = numbers.split('-')
+		region = rest[brace_pos + 1:-1]  # Remove the braces
+		return cls(int(start), int(end), region)
+
+
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--input", help="The '7_V-REGION-mutation-and-AA-change-table' and '10_V-REGION-mutation-hotspots' merged together, with an added 'best_match' annotation")
@@ -367,7 +383,6 @@ def main():
 			o.write("TW (%)," + ("0,0,0\n" * len(genes)))
 		sys.exit()
 
-	hotspotMatcher = re.compile("[actg]+,(\d+)-(\d+)\((.*)\)")
 	RGYWCount = {}
 	WRCYCount = {}
 	WACount = {}
@@ -392,14 +407,10 @@ def main():
 			linesplt = line.split("\t")
 			gene = linesplt[best_matchIndex]
 			ID = linesplt[IDIndex]
-			RGYW = [(int(x), int(y), z) for (x, y, z) in
-					[hotspotMatcher.match(x).groups() for x in linesplt[aggctatIndex].split("|") if x]]
-			WRCY = [(int(x), int(y), z) for (x, y, z) in
-					[hotspotMatcher.match(x).groups() for x in linesplt[atagcctIndex].split("|") if x]]
-			WA = [(int(x), int(y), z) for (x, y, z) in
-				[hotspotMatcher.match(x).groups() for x in linesplt[ataIndex].split("|") if x]]
-			TW = [(int(x), int(y), z) for (x, y, z) in
-				[hotspotMatcher.match(x).groups() for x in linesplt[tatIndex].split("|") if x]]
+			RGYW = [Hotspot.from_string(x) for x in linesplt[aggctatIndex].split("|") if x]
+			WRCY = [Hotspot.from_string(x) for x in linesplt[atagcctIndex].split("|") if x]
+			WA = [Hotspot.from_string(x) for x in linesplt[ataIndex].split("|") if x]
+			TW = [Hotspot.from_string(x) for x in linesplt[tatIndex].split("|") if x]
 			RGYWCount[ID], WRCYCount[ID], WACount[ID], TWCount[ID] = 0, 0, 0, 0
 
 			with open(os.path.join(os.path.dirname(os.path.abspath(infile)), "RGYW.txt"), 'a') as out_handle:
