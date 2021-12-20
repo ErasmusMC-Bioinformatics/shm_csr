@@ -2,7 +2,6 @@ import argparse
 import logging
 import sys
 import os
-import re
 import typing
 from typing import Optional
 
@@ -78,7 +77,6 @@ def main():
 
 	mutationdic = dict()
 	NAMatchResult = (None, None, None, None, None, None, '')
-	geneMatchers = {gene: re.compile("^" + gene + ".*") for gene in genes}
 	linecount = 0
 
 	IDIndex = 0
@@ -528,11 +526,10 @@ def main():
 				o.write(typ + " (%)")
 				curr = dic[typ]
 				for gene in genes:
-					geneMatcher = geneMatchers[gene]
 					if valuedic[gene + "_" + fname] is 0:
 						o.write(",0,0,0")
 					else:
-						x, y, z = get_xyz([curr[x] for x in [y for y, z in genedic.items() if geneMatcher.match(z)]], gene, func, fname)
+						x, y, z = get_xyz([curr[x] for x in [y for y, z in genedic.items() if z.startswith(gene)]], gene, func, fname)
 						o.write("," + x + "," + y + "," + z)
 				x, y, z = get_xyz([y for x, y in curr.items() if not genedic[x].startswith("unmatched")], "total", func, fname)
 				#x, y, z = get_xyz([y for x, y in curr.iteritems()], "total", func, fname)
