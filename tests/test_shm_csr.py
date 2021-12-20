@@ -110,9 +110,6 @@ def test_check_output(shm_csr_result):
 
 @pytest.mark.parametrize("filename", os.listdir(VALIDATION_DATA_DIR))
 def test_results_match_validation(shm_csr_result, filename):
-    if filename == "shm_overview.txt":
-        # TODO: Fix errors in shm_overview.
-        return
     with open(Path(shm_csr_result, filename)) as result_h:
         with open(Path(VALIDATION_DATA_DIR, filename)) as validate_h:
             for line in result_h:
