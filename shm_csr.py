@@ -3,8 +3,46 @@ import logging
 import sys
 import os
 import re
+import typing
+from typing import Optional
 
 from collections import defaultdict
+
+
+class Mutation(typing.NamedTuple):
+	"""Represent a mutation type as a tuple"""
+	frm: str  # 'from' is a reserved python keyword.
+	where: int
+	to: str
+	frmAA: Optional[str] = None
+	whereAA: Optional[int] = None
+	toAA: Optional[str] = None
+	thing: Optional[str] = None  # '(---)' or '(+-+)' etc. No idea
+
+	@classmethod
+	def from_string(cls, string: str):
+		# Complete mutation example: a88>g,I30>V(+ - +)
+		# Only nucleotide example: g303>t
+		if ',' in string:
+			nucleotide_change, aa_change = string.split(',', maxsplit=1)  # type: str, Optional[str]
+		else:
+			nucleotide_change = string
+			aa_change = None
+		frm_part, to = nucleotide_change.split('>', maxsplit=1)
+		frm = frm_part[0]
+		where = int(frm_part[1:])
+
+		if aa_change is None:
+			return cls(frm, where, to)
+
+		frmAA_part, toAA_part = aa_change.split('>', maxsplit=1)  # type: str, str
+		frmAA = frmAA_part[0]
+		whereAA = int(frmAA_part[1:])
+		brace_start = toAA_part.index('(')
+		toAA = toAA_part[:brace_start]
+		thing = toAA_part[brace_start:]
+		return cls(frm, where, to, frmAA, whereAA, toAA, thing)
+
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -23,10 +61,6 @@ def main():
 	genedic = dict()
 
 	mutationdic = dict()
-	mutationMatcher = re.compile("^(.)(\d+).(.),?[ ]?(.)?(\d+)?.?(.)?(.?.?.?.?.?)?")
-	mutationMatcher = re.compile("^([actg])(\d+).([actg]),?[ ]?([A-Z])?(\d+)?.?([A-Z])?(.*)?")
-	mutationMatcher = re.compile("^([actg])(\d+).([actg]),?[ ]?([A-Z])?(\d+)?[>]?([A-Z;])?(.*)?")
-	mutationMatcher = re.compile(r"^([nactg])(\d+).([nactg]),?[ ]?([A-Z*])?(\d+)?[>]?([A-Z*;])?(.*)?")
 	NAMatchResult = (None, None, None, None, None, None, '')
 	geneMatchers = {gene: re.compile("^" + gene + ".*") for gene in genes}
 	linecount = 0
@@ -84,25 +118,25 @@ def main():
 			
 			mutationdic[ID + "_FR1"] = []
 			if len(linesplt[fr1Index]) > 5 and empty_region_filter == "leader":
-				mutationdic[ID + "_FR1"] = [mutationMatcher.match(x).groups() for x in linesplt[fr1Index].split("|") if x]
+				mutationdic[ID + "_FR1"] = [Mutation.from_string(x) for x in linesplt[fr1Index].split("|") if x]
 
 			mutationdic[ID + "_CDR1"] = []
 			if len(linesplt[cdr1Index]) > 5 and empty_region_filter in ["leader", "FR1"]:
-				mutationdic[ID + "_CDR1"] = [mutationMatcher.match(x).groups() for x in linesplt[cdr1Index].split("|") if x]
+				mutationdic[ID + "_CDR1"] = [Mutation.from_string(x) for x in linesplt[cdr1Index].split("|") if x]
 
 			mutationdic[ID + "_FR2"] = []
 			if len(linesplt[fr2Index]) > 5 and empty_region_filter in ["leader", "FR1", "CDR1"]:
-				mutationdic[ID + "_FR2"] = [mutationMatcher.match(x).groups() for x in linesplt[fr2Index].split("|") if x]
+				mutationdic[ID + "_FR2"] = [Mutation.from_string(x) for x in linesplt[fr2Index].split("|") if x]
 
 			mutationdic[ID + "_CDR2"] = []
 			if len(linesplt[cdr2Index]) > 5:
-				mutationdic[ID + "_CDR2"] = [mutationMatcher.match(x).groups() for x in linesplt[cdr2Index].split("|") if x]
+				mutationdic[ID + "_CDR2"] = [Mutation.from_string(x) for x in linesplt[cdr2Index].split("|") if x]
 			
 			mutationdic[ID + "_FR2-CDR2"] = mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"]
 
 			mutationdic[ID + "_FR3"] = []
 			if len(linesplt[fr3Index]) > 5:
-				mutationdic[ID + "_FR3"] = [mutationMatcher.match(x).groups() for x in linesplt[fr3Index].split("|") if x]
+				mutationdic[ID + "_FR3"] = [Mutation.from_string(x) for x in linesplt[fr3Index].split("|") if x]
 				
 			mutationList += mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
 			mutationListByID[ID] = mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
@@ -417,7 +451,7 @@ def main():
 								out_handle.write("{0}\n".format(
 									"\t".join([
 										ID,
-										where,
+										str(where),
 										region,
 										frm,
 										to,
