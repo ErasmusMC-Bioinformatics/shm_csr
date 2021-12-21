@@ -96,6 +96,8 @@ def shm_csr_result():
     docker_cmd = ["docker", "run", "-v", f"{temp_dir}:{temp_dir}",
                   "-v", f"{input}:{input}",
                   "-w", str(working_dir),
+                  # Run as current user which allows deletion of files.
+                  "-u", f"{os.getuid()}:{os.getgid()}",
                   get_container()] + cmd
     with open(temp_dir / "stderr", "wt") as stderr_file:
         with open(temp_dir / "stdout", "wt") as stdout_file:
