@@ -247,7 +247,9 @@ def main():
 																str(num_mutations),
 																str(num_tandem_muts),
 																str(region_length),
-																str(round(expected_tandem_muts, 2)),
+																# String format and round disagree slightly (see 3.605).
+																# So round before formatting.
+																f"{round(expected_tandem_muts, 2):.2f}",
 																str(longest_tandem[1]),
 																str(tandem_muts)))
 			gene = genedic[ID]
