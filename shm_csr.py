@@ -243,15 +243,11 @@ def main():
 			f_num_mutations = float(num_mutations)
 			num_tandem_muts = len(tandem_muts)
 			expected_tandem_muts = f_num_mutations * (f_num_mutations - 1.0) / float(region_length)
-			o.write("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\n".format(ID,
-																str(num_mutations),
-																str(num_tandem_muts),
-																str(region_length),
-																# String format and round disagree slightly (see 3.605).
-																# So round before formatting.
-																f"{round(expected_tandem_muts, 2):.2f}",
-																str(longest_tandem[1]),
-																str(tandem_muts)))
+			# String format and round disagree slightly (see 3.605).
+			# So round before formatting.
+			o.write(f"{ID}\t{num_mutations}\t{num_tandem_muts}\t{region_length}\t"
+					f"{round(expected_tandem_muts, 2):.2f}\t"  
+					f"{longest_tandem[1]}\t{tandem_muts}\n")
 			gene = genedic[ID]
 			if gene.find("unmatched") == -1:
 				tandem_sum_by_class[gene] += num_tandem_muts
