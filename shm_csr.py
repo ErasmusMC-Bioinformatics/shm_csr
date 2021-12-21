@@ -7,6 +7,8 @@ from typing import Optional
 
 from collections import defaultdict
 
+REGION_FILTERS = ("leader", "FR1", "CDR1", "FR2", "CDR2")
+
 
 class Mutation(typing.NamedTuple):
 	"""Represent a mutation type as a tuple"""
@@ -63,7 +65,7 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--input", help="The '7_V-REGION-mutation-and-AA-change-table' and '10_V-REGION-mutation-hotspots' merged together, with an added 'best_match' annotation")
 	parser.add_argument("--genes", help="The genes available in the 'best_match' column")
-	parser.add_argument("--empty_region_filter", help="Where does the sequence start?", choices=['leader', 'FR1', 'CDR1', 'FR2'])
+	parser.add_argument("--empty_region_filter", help="Where does the sequence start?", choices=REGION_FILTERS)
 	parser.add_argument("--output", help="Output file")
 
 	args = parser.parse_args()
@@ -90,19 +92,13 @@ def main():
 	IDlist = []
 	mutationList = []
 	mutationListByID = {}
-	cdr1LengthDic = {}
-	cdr2LengthDic = {}
+	cdr1AALengthDic = {}
+	cdr2AALengthDic = {}
 
-	fr1LengthDict = {}
-	fr2LengthDict = {}
-	fr3LengthDict = {}
+	LengthDic = {}
 
 	cdr1LengthIndex = 0
 	cdr2LengthIndex = 0
-
-	fr1SeqIndex = 0
-	fr2SeqIndex = 0
-	fr3SeqIndex = 0
 
 	tandem_sum_by_class = defaultdict(int)
 	expected_tandem_sum_by_class = defaultdict(float)
@@ -118,11 +114,13 @@ def main():
 				fr2Index = linesplt.index("FR2.IMGT")
 				cdr2Index = linesplt.index("CDR2.IMGT")
 				fr3Index = linesplt.index("FR3.IMGT")
-				cdr1LengthIndex = linesplt.index("CDR1.IMGT.length")
-				cdr2LengthIndex = linesplt.index("CDR2.IMGT.length")
-				fr1SeqIndex = linesplt.index("FR1.IMGT.seq")
-				fr2SeqIndex = linesplt.index("FR2.IMGT.seq")
-				fr3SeqIndex = linesplt.index("FR3.IMGT.seq")
+				fr1LengthIndex = linesplt.index("FR1.IMGT.Nb.of.nucleotides")
+				fr2LengthIndex = linesplt.index("FR2.IMGT.Nb.of.nucleotides")
+				fr3LengthIndex = linesplt.index("FR3.IMGT.Nb.of.nucleotides")
+				cdr1LengthIndex = linesplt.index("CDR1.IMGT.Nb.of.nucleotides")
+				cdr2LengthIndex = linesplt.index("CDR2.IMGT.Nb.of.nucleotides")
+				cdr1AALengthIndex = linesplt.index("CDR1.IMGT.length")
+				cdr2AALengthIndex = linesplt.index("CDR2.IMGT.length")
 				first = False
 				continue
 			linecount += 1
@@ -155,27 +153,15 @@ def main():
 			mutationList += mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
 			mutationListByID[ID] = mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
 
-			try:
-				cdr1Length = int(linesplt[cdr1LengthIndex])
-			except:
-				cdr1Length = 0
-			
-			try:
-				cdr2Length = int(linesplt[cdr2LengthIndex])
-			except:
-				cdr2Length = 0
+			fr1Length = int(linesplt[fr1LengthIndex])
+			fr2Length = int(linesplt[fr2LengthIndex])
+			fr3Length = int(linesplt[fr3LengthIndex])
+			cdr1Length = int(linesplt[cdr1LengthIndex])
+			cdr2Length = int(linesplt[cdr2LengthIndex])
+			LengthDic[ID] = (fr1Length, cdr1Length, fr2Length, cdr2Length, fr3Length)
 
-			#print linesplt[fr2SeqIndex]
-			fr1Length = len(linesplt[fr1SeqIndex]) if empty_region_filter == "leader" else 0
-			fr2Length = len(linesplt[fr2SeqIndex]) if empty_region_filter in ["leader", "FR1", "CDR1"] else 0
-			fr3Length = len(linesplt[fr3SeqIndex])
-
-			cdr1LengthDic[ID] = cdr1Length
-			cdr2LengthDic[ID] = cdr2Length
-
-			fr1LengthDict[ID] = fr1Length
-			fr2LengthDict[ID] = fr2Length
-			fr3LengthDict[ID] = fr3Length
+			cdr1AALengthDic[ID] = int(linesplt[cdr1AALengthIndex])
+			cdr2AALengthDic[ID] = int(linesplt[cdr2AALengthIndex])
 
 			IDlist += [ID]
 	print("len(mutationdic) =", len(mutationdic))
@@ -203,10 +189,20 @@ def main():
 	tandem_file = os.path.join(os.path.dirname(outfile), "tandems_by_id.txt")
 	with open(tandem_file, 'w') as o:
 		highest_tandem_length = 0
+		# LengthDic stores length as a tuple
+		# (fr1Length, cdr1Length, fr2Length, cdr2Length, fr3Length)
+		# To get the total length, we can sum(region_lengths)
+		# To get the total length for leader:
+		# sum(region_lengths[0:]) (Equivalent to everything)
+		# sum(region_lengths[1:]) Gets everything except FR1 etc.
+		# We determine the position to start summing below.
+		# This returns 0 for leader, 1 for FR1 etc.
+		length_start_pos = REGION_FILTERS.index(empty_region_filter)
 
 		o.write("Sequence.ID\tnumber_of_mutations\tnumber_of_tandems\tregion_length\texpected_tandems\tlongest_tandem\ttandems\n")
 		for ID in IDlist:
 			mutations = mutationListByID[ID]
+			region_length = sum(LengthDic[ID][length_start_pos:])
 			if len(mutations) == 0:
 				continue
 			last_mut = max(mutations, key=lambda x: int(x[1]))
@@ -242,7 +238,6 @@ def main():
 				if highest_tandem_length < len(tandem_muts):
 					highest_tandem_length = len(tandem_muts)
 
-			region_length = fr1LengthDict[ID] + cdr1LengthDic[ID] + fr2LengthDict[ID] + cdr2LengthDic[ID] + fr3LengthDict[ID]
 			longest_tandem = max(tandem_muts, key=lambda x: x[1]) if len(tandem_muts) else (0, 0)
 			num_mutations = mutations_by_id_dic[ID] # len(mutations)
 			f_num_mutations = float(num_mutations)
@@ -349,11 +344,11 @@ def main():
 	absentAACDR2Dic[9] = [60]
 
 	absentAA = [len(IDlist)] * (AALength-1)
-	for k, cdr1Length in cdr1LengthDic.items():
+	for k, cdr1Length in cdr1AALengthDic.items():
 		for c in absentAACDR1Dic[cdr1Length]:
 			absentAA[c] -= 1
 
-	for k, cdr2Length in cdr2LengthDic.items():
+	for k, cdr2Length in cdr2AALengthDic.items():
 		for c in absentAACDR2Dic[cdr2Length]:
 			absentAA[c] -= 1
 
@@ -363,11 +358,11 @@ def main():
 		o.write("ID\tcdr1length\tcdr2length\tbest_match\t" + "\t".join([str(x) for x in range(1,AALength)]) + "\n")
 		for ID in IDlist:
 			absentAAbyID = [1] * (AALength-1)
-			cdr1Length = cdr1LengthDic[ID]
+			cdr1Length = cdr1AALengthDic[ID]
 			for c in absentAACDR1Dic[cdr1Length]:
 				absentAAbyID[c] -= 1
 
-			cdr2Length = cdr2LengthDic[ID]
+			cdr2Length = cdr2AALengthDic[ID]
 			for c in absentAACDR2Dic[cdr2Length]:
 				absentAAbyID[c] -= 1
 			o.write(ID + "\t" + str(cdr1Length) + "\t" + str(cdr2Length) + "\t" + genedic[ID] + "\t" + "\t".join([str(x) for x in absentAAbyID]) + "\n")
