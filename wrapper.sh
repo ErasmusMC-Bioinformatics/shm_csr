@@ -895,25 +895,25 @@ IFS="$tIFS"
 echo "---------------- remove_files----------------"
 echo "---------------- remove_files----------------<br />" >> $log
 
-#rm -r -v -f $outdir/baseline
-#rm -r -v -f $PWD/files
-#rm -v $PWD/aa.txt
-#rm -v $PWD/aa_change_stats.txt
-#rm -v $PWD/gapped_aa.txt
-#rm -v $PWD/gapped_nt.txt
-#rm -v $PWD/hotspots.txt
-#rm -v $PWD/junction.txt
-#rm -v $PWD/mutationanalysis.txt
-#rm -v $PWD/mutationstats.txt
-#rm -v $PWD/sequences.txt
-#rm -v $PWD/summary.txt
-#rm -v $PWD/Rplots.pdf
-#
-#filename="$dir/remove_files.txt"
-#
-#while read file; do
-#    rm -v -f $outdir/$file
-#done < "$filename"
+rm -r -v -f $outdir/baseline
+rm -r -v -f $PWD/files
+rm -v $PWD/aa.txt
+rm -v $PWD/aa_change_stats.txt
+rm -v $PWD/gapped_aa.txt
+rm -v $PWD/gapped_nt.txt
+rm -v $PWD/hotspots.txt
+rm -v $PWD/junction.txt
+rm -v $PWD/mutationanalysis.txt
+rm -v $PWD/mutationstats.txt
+rm -v $PWD/sequences.txt
+rm -v $PWD/summary.txt
+rm -v $PWD/Rplots.pdf
+
+filename="$dir/remove_files.txt"
+
+while read file; do
+    rm -v -f $outdir/$file
+done < "$filename"
 
 echo "---------------- Done! ----------------"
 echo "---------------- Done! ----------------<br />" >> $outdir/log.html
