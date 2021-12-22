@@ -123,11 +123,12 @@ def test_results_match_validation(shm_csr_result, filename):
             for line in result_h:
                 # Skip two faulty lines in shm_overview.
                 # TODO: Fix the issue.
-                if (filename == "shm_overview.txt"
-                        and (line.startswith("RGYW (%)")
-                        or line.startswith("WRCY (%)"))):
-                    continue
-                assert line == validate_h.readline()
+                validation_line = validate_h.readline()
+                if filename == "shm_overview.txt":
+                    if (line.startswith("RGYW (%)") or
+                            line.startswith("WRCY (%)")):
+                        continue
+                assert line == validation_line
 
 
 def test_nt_overview(shm_csr_result):
