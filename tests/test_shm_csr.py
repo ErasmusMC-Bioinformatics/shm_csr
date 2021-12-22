@@ -94,8 +94,16 @@ def shm_csr_result():
         fast
     ]
     docker_cmd = ["docker", "run", "-v", f"{temp_dir}:{temp_dir}",
+                  "--rm",  # Remove container after running
                   "-v", f"{input}:{input}",
                   "-w", str(working_dir),
+                  # Run as current user which allows deletion of files.
+                  # It also mitigates some security considerations
+                  "-u", f"{os.getuid()}:{os.getgid()}",
+                  # Run with default seccomp profile to mitigate mitigation slowdown
+                  # http://mamememo.blogspot.com/2020/05/cpu-intensive-rubypython-code-runs.html
+                  # This knocks down test runtime from 8 to 6 minutes.
+                  "--security-opt", "seccomp=unconfined",
                   get_container()] + cmd
     with open(temp_dir / "stderr", "wt") as stderr_file:
         with open(temp_dir / "stdout", "wt") as stdout_file:
@@ -110,13 +118,17 @@ def test_check_output(shm_csr_result):
 
 @pytest.mark.parametrize("filename", os.listdir(VALIDATION_DATA_DIR))
 def test_results_match_validation(shm_csr_result, filename):
-    if filename == "shm_overview.txt":
-        # TODO: Fix errors in shm_overview.
-        return
     with open(Path(shm_csr_result, filename)) as result_h:
         with open(Path(VALIDATION_DATA_DIR, filename)) as validate_h:
             for line in result_h:
-                assert line == validate_h.readline()
+                # Skip two faulty lines in shm_overview.
+                # TODO: Fix the issue.
+                validation_line = validate_h.readline()
+                if filename == "shm_overview.txt":
+                    if (line.startswith("RGYW (%)") or
+                            line.startswith("WRCY (%)")):
+                        continue
+                assert line == validation_line
 
 
 def test_nt_overview(shm_csr_result):
