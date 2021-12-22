@@ -1,3 +1,7 @@
+version 1.3.3
+-------------
++ Fix a bug where tandem lengths were incorrectly calculated.
+
 version 1.3.2
 -------------
 + Fix a bug where the file removal process caused errors.
