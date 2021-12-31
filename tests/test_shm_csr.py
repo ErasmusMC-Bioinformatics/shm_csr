@@ -104,7 +104,9 @@ def shm_csr_result():
                   # http://mamememo.blogspot.com/2020/05/cpu-intensive-rubypython-code-runs.html
                   # This knocks down test runtime from 8 to 6 minutes.
                   "--security-opt", "seccomp=unconfined",
-                  get_container()] + cmd
+                  # Use a mulled container generated with `planemo mull`
+                  "quay.io/biocontainers/mulled-v2-f7d31c9d7424063a492fc0e5ecbf89bc757c0107:2b50bdd4d8c1fefc6ec24b0753fad0dcecec843b-0"
+                  ] + cmd
     with open(temp_dir / "stderr", "wt") as stderr_file:
         with open(temp_dir / "stdout", "wt") as stdout_file:
             subprocess.run(docker_cmd, cwd=working_dir, stdout=stdout_file,
