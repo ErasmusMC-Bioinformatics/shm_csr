@@ -1,3 +1,8 @@
+version 1.4.0
+-------------
++ Fix a bug where synonymous mutations where incorrectly parsed.
++ Use a container from biocontainers.
+
 version 1.3.3
 -------------
 + Fix a bug where tandem lengths were incorrectly calculated.
