@@ -17,7 +17,10 @@ dependencies:
   - r-seqinr=3.4_5
   - r-data.table=1.11.4
   - file=5.39
+  - bc=1.07.1
+  - findutils=4.6.0
+  - font-ttf-ubuntu=0.83
   # Test dependencies below
-  - pytest
+  - pytest=6.2.5
   # Add planemo so tool can be uploaded
-  - planemo
+  - planemo=0.74.9

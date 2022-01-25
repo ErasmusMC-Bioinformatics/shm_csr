@@ -24,23 +24,38 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from xml.etree import ElementTree
+from xml.etree.ElementTree import Element
 
 import pytest
 
-GIT_ROOT = str(Path(__file__).parent.parent.absolute())
+GIT_ROOT = Path(__file__).parent.parent.absolute()
 TEST_DIR = Path(__file__).parent
 TEST_DATA_DIR = TEST_DIR / "data"
 VALIDATION_DATA_DIR = TEST_DIR / "validation_data"
 CONTROL_NWK377_PB_IGHC_MID1_40nt_2 = TEST_DATA_DIR / "CONTROL_NWK377_PB_IGHC_MID1_40nt_2.txz"
 
 
+def get_container():
+    tool = ElementTree.parse(GIT_ROOT / "shm_csr.xml").getroot()
+    requirements: Element = tool.find("requirements")
+    container = requirements.find("container")
+    return container.text
+
+
 @pytest.fixture(scope="module")
 def shm_csr_result():
-    temp_dir = tempfile.mktemp()
-    shutil.copytree(GIT_ROOT, temp_dir)
+    temp_dir = Path(tempfile.mkdtemp())
+    tool_dir = temp_dir / "shm_csr"
+    shutil.copytree(GIT_ROOT, tool_dir)
+    working_dir = temp_dir / "working"
+    working_dir.mkdir(parents=True)
+    output_dir = temp_dir / "outputs"
+    output_dir.mkdir(parents=True)
+    wrapper = str(tool_dir / "wrapper.sh")
     input = str(CONTROL_NWK377_PB_IGHC_MID1_40nt_2)
-    out_files_path = os.path.join(temp_dir, "results")
-    out_file = os.path.join(out_files_path, "result.html")
+    out_files_path = output_dir / "results"
+    out_file = out_files_path / "result.html"
     infile_name = "input_data"
     functionality = "productive"
     unique = "Sequence.ID"
@@ -57,11 +72,11 @@ def shm_csr_result():
     fast = 'no'
     cmd = [
         "bash",
-        "wrapper.sh",
+        wrapper,
         input,
         "custom",
-        out_file,
-        out_files_path,
+        str(out_file),
+        str(out_files_path),
         infile_name,
         "-",
         functionality,
@@ -78,10 +93,25 @@ def shm_csr_result():
         empty_region_filter,
         fast
     ]
-    subprocess.run(cmd, cwd=temp_dir, stdout=sys.stdout, stderr=sys.stderr,
-                   check=True)
+    docker_cmd = ["docker", "run", "-v", f"{temp_dir}:{temp_dir}",
+                  "--rm",  # Remove container after running
+                  "-v", f"{input}:{input}",
+                  "-w", str(working_dir),
+                  # Run as current user which allows deletion of files.
+                  # It also mitigates some security considerations
+                  "-u", f"{os.getuid()}:{os.getgid()}",
+                  # Run with default seccomp profile to mitigate mitigation slowdown
+                  # http://mamememo.blogspot.com/2020/05/cpu-intensive-rubypython-code-runs.html
+                  # This knocks down test runtime from 8 to 6 minutes.
+                  "--security-opt", "seccomp=unconfined",
+                  # Use a mulled container generated with `planemo mull`
+                  "quay.io/biocontainers/mulled-v2-f7d31c9d7424063a492fc0e5ecbf89bc757c0107:2b50bdd4d8c1fefc6ec24b0753fad0dcecec843b-0"
+                  ] + cmd
+    with open(temp_dir / "stderr", "wt") as stderr_file:
+        with open(temp_dir / "stdout", "wt") as stdout_file:
+            subprocess.run(docker_cmd, cwd=working_dir, stdout=stdout_file,
+                           stderr=stderr_file, check=True)
     yield Path(out_files_path)
-    #shutil.rmtree(temp_dir)
 
 
 def test_check_output(shm_csr_result):
@@ -90,13 +120,17 @@ def test_check_output(shm_csr_result):
 
 @pytest.mark.parametrize("filename", os.listdir(VALIDATION_DATA_DIR))
 def test_results_match_validation(shm_csr_result, filename):
-    if filename == "shm_overview.txt":
-        # TODO: Fix errors in shm_overview.
-        return
     with open(Path(shm_csr_result, filename)) as result_h:
         with open(Path(VALIDATION_DATA_DIR, filename)) as validate_h:
             for line in result_h:
-                assert line == validate_h.readline()
+                # Skip two faulty lines in shm_overview.
+                # TODO: Fix the issue.
+                validation_line = validate_h.readline()
+                if filename == "shm_overview.txt":
+                    if (line.startswith("RGYW (%)") or
+                            line.startswith("WRCY (%)")):
+                        continue
+                assert line == validation_line
 
 
 def test_nt_overview(shm_csr_result):
