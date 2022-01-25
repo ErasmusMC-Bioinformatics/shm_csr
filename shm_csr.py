@@ -543,7 +543,7 @@ def main():
 				o.write(typ + " (%)")
 				curr = dic[typ]
 				for gene in genes:
-					if valuedic[gene + "_" + fname] is 0:
+					if valuedic[gene + "_" + fname] == 0:
 						o.write(",0,0,0")
 					else:
 						x, y, z = get_xyz([curr[x] for x in [y for y, z in genedic.items() if z.startswith(gene)]], gene, func, fname)
