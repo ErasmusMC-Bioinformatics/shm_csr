@@ -24,6 +24,10 @@ class Mutation(typing.NamedTuple):
 	def from_string(cls, string: str):
 		# Complete mutation example: a88>g,I30>V(+ - +)
 		# Only nucleotide example: g303>t
+		# Including codon change:
+		# t169>g,Y57>D(- - -); Y57 tat 169-171 [ta 169-170]>D gac
+		# Including codon change (synonumous mutation):
+		# c114>t, Y38; Y38 tac 112-114 [tact 112-115]>Y tat
 		if ',' in string:
 			nucleotide_change, aa_change = string.split(',', maxsplit=1)  # type: str, Optional[str]
 		else:
@@ -36,12 +40,32 @@ class Mutation(typing.NamedTuple):
 		if aa_change is None:
 			return cls(frm, where, to)
 
-		frmAA_part, toAA_part = aa_change.split('>', maxsplit=1)  # type: str, str
+		aa_change = aa_change.strip()
+		# The part after semicolon indicates the codon change. This part may
+		# not be present.
+		semi_colon_index = aa_change.find(";")
+		if semi_colon_index == -1:
+			codon_change = ""
+		else:
+			codon_change = aa_change[semi_colon_index:]
+			aa_change = aa_change[:semi_colon_index]
+		change_operator_index = aa_change.find(">")
+		if change_operator_index == -1:
+			# Synonymous change
+			frmAA_part = aa_change
+			toAA_part = ""
+		else:
+			frmAA_part, toAA_part = aa_change.split('>', maxsplit=1)  # type: str, str
 		frmAA = frmAA_part[0]
 		whereAA = int(frmAA_part[1:])
-		brace_start = toAA_part.index('(')
-		toAA = toAA_part[:brace_start]
-		thing = toAA_part[brace_start:]
+		if toAA_part:
+			brace_start = toAA_part.index('(')
+			toAA = toAA_part[:brace_start]
+			thing = toAA_part[brace_start:] + codon_change
+		else:
+			# Synonymous mutation
+			toAA = frmAA
+			thing = codon_change
 		return cls(frm, where, to, frmAA, whereAA, toAA, thing)
 
 
