@@ -740,10 +740,34 @@ if [[ "$fast" == "no" ]] ; then
 
 fi
 
+# Use python's zipfile utility to prevent needing another dependency in the
+# container.
+current_dir=$(pwd)
+cd $outdir
+python -m zipfile -c all_outputs.zip \
+  merged.txt filtered.txt unmatched.txt shm_overview.txt motif_per_seq.txt \
+  mutation_by_id.txt base_overview.html aid_motives.txt relative_mutations.txt \
+  absolute_mutations.txt tandems_by_id.txt scatter.txt frequency_ranges_class.txt \
+  frequency_ranges_subclasses.txt transitions_all_sum.txt transitions_IGA_sum.txt \
+  transitions_IGA1_sum.txt transitions_IGA2_sum.txt transitions_IGG_sum.txt \
+  transitions_IGG1_sum.txt transitions_IGG2_sum.txt transitions_IGG3_sum.txt \
+  transitions_IGG4_sum.txt transitions_IGM_sum.txt transitions_IGE_sum.txt \
+  aa_id_mutations.txt absent_aa_id.txt aa_histogram_sum.txt \
+  aa_histogram_sum_IGA.txt aa_histogram_sum_IGG.txt aa_histogram_sum_IGM.txt \
+  aa_histogram_sum_IGE.txt baseline.txt baseline_IGA.pdf baseline_IGA.txt \
+  baseline_IGG.pdf baseline_IGG.txt baseline_IGM.pdf baseline_IGM.txt \
+  baseline_IGE.pdf baseline_IGE.txt IGA_pie.txt IGG_pie.txt \
+  sequence_overview/index.html change_o/change-o-db-defined_clones*.txt \
+  *.txz
+
+cd $current_dir
+
+
 echo "<div class='tabbertab' title='Downloads'>" >> $output
 
 echo "<table class='pure-table pure-table-striped'>" >> $output
 echo "<thead><tr><th>info</th><th>link</th></tr></thead>" >> $output
+echo "<tr><td>All output files in a zip file</td><td><a href='all_outputs.zip' download='all_outputs.zip' >Download</a></td></tr>" >> $output
 echo "<tr><td>The complete dataset</td><td><a href='merged.txt' download='merged.txt' >Download</a></td></tr>" >> $output
 echo "<tr><td>The filtered dataset</td><td><a href='filtered.txt' download='filtered.txt' >Download</a></td></tr>" >> $output
 echo "<tr><td>The alignment info on the unmatched sequences</td><td><a href='unmatched.txt' download='unmatched.txt' >Download</a></td></tr>" >> $output
