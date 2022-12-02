@@ -11,7 +11,6 @@ import argparse
 import io
 import os
 import tarfile
-import tempfile
 from typing import Iterator, Tuple
 
 
@@ -61,9 +60,14 @@ def split_imgt(imgt_file, merged_file, outdir):
     match_dict = merged_txt_to_match_dict(merged_file)
     genes = ["", "IGA", "IGA1", "IGA2", "IGG", "IGG1", "IGG2", "IGG3", "IGG4",
              "IGM", "IGE"]
+    gene_outdirs = []
     gene_tarfiles = []
     os.makedirs(outdir, exist_ok=True)
     for gene in genes:
+        gene_dir = f"new_IMGT_{gene}" if gene else "new_IMGT"
+        gene_dirpath = os.path.join(outdir, gene_dir)
+        os.mkdir(gene_dirpath)
+        gene_outdirs.append(gene_dirpath)
         new_filename = f"new_IMGT_{gene}.txz" if gene else "new_IMGT.txz"
         gene_tarfiles.append(
             tarfile.open(os.path.join(outdir, new_filename), mode="w:xz")
@@ -72,11 +76,9 @@ def split_imgt(imgt_file, merged_file, outdir):
         # Read each table one by one and per line select in which output
         # files it should go.
         gene_files = []
-        for gene in genes:
-            fp, fname = tempfile.mkstemp()
-            # The file pointer fp will be wrapped in a python file object
-            # so we can ensure there remain no open files.
-            f = open(fp, mode="wt")
+        for gene, gene_dir in zip(genes, gene_outdirs):
+            fname = os.path.join(gene_dir, name)
+            f = open(fname, "wt")
             gene_files.append((gene, f, fname))
         header = next(table)
         header_number_of_tabs = header.count('\t')
