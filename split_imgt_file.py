@@ -21,7 +21,8 @@ def merged_txt_to_match_dict(merged: str):
             values = line.strip().split("\t")
             sequence_id = values[sequence_id_index]
             best_match = values[best_match_index]
-            if best_match == "unmatched":
+            if "unmatched" in best_match:
+                # For some reason the table has values such as: unmatched, IGA2
                 continue
             match_dict[sequence_id] = best_match
     return match_dict
@@ -63,6 +64,8 @@ def split_imgt(imgt_file, merged_file, outdir):
             gene_files.append((gene, f, fname))
         header = next(table)
         column_names = header.strip("\n").split("\t")
+        fr1_columns = [index for index, column in enumerate(column_names)
+                       if column.startswith("FR1")]
         sequence_id_index = column_names.index("Sequence ID")
         for _, gene_file, _ in gene_files:
             gene_file.write(header)
@@ -72,6 +75,11 @@ def split_imgt(imgt_file, merged_file, outdir):
             match = match_dict.get(sequence_id)
             if match is None:
                 continue
+            if name.startswith("8_"):
+                # change the FR1 columns to 0 in the "8_..." file
+                for index in fr1_columns:
+                    values[index] = "0"
+                line = "\t".join(values) + "\n"
             for gene, gene_file, _ in gene_files:
                 if gene in match:
                     gene_file.write(line)
