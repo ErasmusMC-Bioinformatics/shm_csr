@@ -24,7 +24,10 @@ fast=${19}
 
 #exec 5> debug_output.txt
 #BASH_XTRACEFD="5"
-#PS4='$(date +%s.%N) $LINENO: '
+## Busybox date does not support '+%s.%N'. So use the slower python instead.
+## Using -S python does not do 'import site' which shortens the command
+## to 10 milliseconds.
+#PS4='$(python -Sc "import time; print(time.time())") $LINENO: '
 #set -x
 
 mkdir -p $outdir
@@ -89,101 +92,8 @@ if [[ "${naive_output}" == "yes" ]] || [[ "$fast" == "no" ]] ; then
 	echo "---------------- creating new IMGT zips ----------------"
 	echo "---------------- creating new IMGT zips ----------------<br />" >> $log
 
-	mkdir $outdir/new_IMGT
+	python split_imgt_file.py $input $outdir/merged.txt --outdir $outdir/new_IMGT
 
-	cp $PWD/summary.txt "$outdir/new_IMGT/1_Summary.txt"
-	cp $PWD/gapped_nt.txt "$outdir/new_IMGT/2_IMGT-gapped-nt-sequences.txt"
-	cp $PWD/sequences.txt "$outdir/new_IMGT/3_Nt-sequences.txt"
-	cp $PWD/gapped_aa.txt "$outdir/new_IMGT/4_IMGT-gapped-AA-sequences.txt"
-	cp $PWD/aa.txt "$outdir/new_IMGT/5_AA-sequences.txt"
-	cp $PWD/junction.txt "$outdir/new_IMGT/6_Junction.txt"
-	cp $PWD/mutationanalysis.txt "$outdir/new_IMGT/7_V-REGION-mutation-and-AA-change-table.txt"
-	cp $PWD/mutationstats.txt "$outdir/new_IMGT/8_V-REGION-nt-mutation-statistics.txt"
-	cp $PWD/aa_change_stats.txt "$outdir/new_IMGT/9_V-REGION-AA-change-statistics.txt"
-	cp $PWD/hotspots.txt "$outdir/new_IMGT/10_V-REGION-mutation-hotspots.txt"
-
-	mkdir $outdir/new_IMGT_IGA
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA
-
-	mkdir $outdir/new_IMGT_IGA1
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA1
-
-	mkdir $outdir/new_IMGT_IGA2
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA2
-
-	mkdir $outdir/new_IMGT_IGG
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG
-
-	mkdir $outdir/new_IMGT_IGG1
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG1
-
-	mkdir $outdir/new_IMGT_IGG2
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG2
-
-	mkdir $outdir/new_IMGT_IGG3
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG3
-
-	mkdir $outdir/new_IMGT_IGG4
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG4
-
-	mkdir $outdir/new_IMGT_IGM
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGM
-
-	mkdir $outdir/new_IMGT_IGE
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGE
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT/ $outdir/merged.txt "-" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGA/ $outdir/merged.txt "IGA" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGA1/ $outdir/merged.txt "IGA1" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGA2/ $outdir/merged.txt "IGA2" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG/ $outdir/merged.txt "IGG" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG1/ $outdir/merged.txt "IGG1" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG2/ $outdir/merged.txt "IGG2" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG3/ $outdir/merged.txt "IGG3" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG4/ $outdir/merged.txt "IGG4" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGM/ $outdir/merged.txt "IGM" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGE/ $outdir/merged.txt "IGE" 2>&1
-
-
-	tmp="$PWD"
-	cd $outdir/new_IMGT/ #tar weirdness...
-	tar -cJf ../new_IMGT.txz *
-
-	cd $outdir/new_IMGT_IGA/
-	tar -cJf ../new_IMGT_IGA.txz *
-
-	cd $outdir/new_IMGT_IGA1/
-	tar -cJf ../new_IMGT_IGA1.txz *
-
-	cd $outdir/new_IMGT_IGA2/
-	tar -cJf ../new_IMGT_IGA2.txz *
-
-	cd $outdir/new_IMGT_IGG/
-	tar -cJf ../new_IMGT_IGG.txz *
-
-	cd $outdir/new_IMGT_IGG1/
-	tar -cJf ../new_IMGT_IGG1.txz *
-
-	cd $outdir/new_IMGT_IGG2/
-	tar -cJf ../new_IMGT_IGG2.txz *
-
-	cd $outdir/new_IMGT_IGG3/
-	tar -cJf ../new_IMGT_IGG3.txz *
-
-	cd $outdir/new_IMGT_IGG4/
-	tar -cJf ../new_IMGT_IGG4.txz *
-
-	cd $outdir/new_IMGT_IGM/
-	tar -cJf ../new_IMGT_IGM.txz *
-
-	cd $outdir/new_IMGT_IGE/
-	tar -cJf ../new_IMGT_IGE.txz *
-
-	cd $tmp
 fi
 
 echo "---------------- shm_csr.r ----------------"
