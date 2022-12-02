@@ -12,7 +12,7 @@ from typing import Iterator, Tuple
 
 def merged_txt_to_match_dict(merged: str):
     with open(merged, "rt") as f:
-        header = next(f).strip()
+        header = next(f).strip("\n")
         column_names = header.split("\t")
         best_match_index = column_names.index("best_match")
         sequence_id_index = column_names.index("Sequence.ID")
@@ -52,7 +52,7 @@ def split_imgt(imgt_file, merged_file, outdir):
     for gene in genes:
         new_filename = f"new_IMGT_{gene}.txz" if gene else "new_IMGT.txz"
         gene_tarfiles.append(
-            tarfile.open(os.path.join(outdir, new_filename), mode="w")
+            tarfile.open(os.path.join(outdir, new_filename), mode="w:xz")
         )
     for name, table in imgt_to_tables(imgt_file):
         # [0] select the file descriptor for the open function
@@ -62,12 +62,12 @@ def split_imgt(imgt_file, merged_file, outdir):
             f = open(fp, mode="wt")
             gene_files.append((gene, f, fname))
         header = next(table)
-        column_names = header.strip().split()
-        sequence_id_index = column_names.index("Sequence.ID")
+        column_names = header.strip("\n").split("\t")
+        sequence_id_index = column_names.index("Sequence ID")
         for _, gene_file, _ in gene_files:
             gene_file.write(header)
         for line in table:
-            values = line.strip().split()
+            values = line.strip("\n").split("\t")
             sequence_id = values[sequence_id_index]
             match = match_dict.get(sequence_id)
             if match is None:
