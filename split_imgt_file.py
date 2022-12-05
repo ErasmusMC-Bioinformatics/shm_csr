@@ -64,8 +64,6 @@ def split_imgt(imgt_file: str, merged_file: str, outdir: str, genes: List[str],
     gene_tarfiles = []
     os.makedirs(outdir, exist_ok=True)
     for gene in genes:
-        if gene == "-":
-            gene = ""
         gene_dir = f"{prefix}_{gene}" if gene else f"{prefix}"
         gene_dirpath = os.path.join(outdir, gene_dir)
         os.mkdir(gene_dirpath)
@@ -133,7 +131,9 @@ def argument_parser() -> argparse.ArgumentParser:
 
 def main():
     args = argument_parser().parse_args()
-    split_imgt(args.imgt_file, args.merged, args.outdir, args.genes)
+    genes = ["" if gene == "-" else gene for gene in args.genes]
+    split_imgt(args.imgt_file, args.merged, args.outdir, genes,
+               args.prefix)
 
 
 if __name__ == "__main__":
