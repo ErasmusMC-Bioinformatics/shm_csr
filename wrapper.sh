@@ -93,6 +93,7 @@ if [[ "${naive_output}" == "yes" ]] || [[ "$fast" == "no" ]] ; then
 	echo "---------------- creating new IMGT zips ----------------<br />" >> $log
 
 	python $dir/split_imgt_file.py --outdir $outdir $input $outdir/merged.txt \
+	  --prefix new_IMGT \
 	  - IGA IGA1 IGA2 IGG IGG1 IGG2 IGG3 IGG4 IGM IGE
 
 fi
@@ -483,8 +484,8 @@ if [[ "$fast" == "no" ]] ; then
 	bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones.txt $outdir/change_o/change-o-defined_clones-summary.txt
 	Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/change_o/change-o-db-defined_first_clones.txt 2>&1
 	
-	python $dir/split_imgt_file.py --outdir . --prefix new_IMGT_first_seq_of_clone \
-	  $outdir new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones.txt \
+	python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_first_seq_of_clone \
+	  $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones.txt \
     "-"
 
 	Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/merged.txt "all" "Sequence.ID,best_match" "SEQUENCE_ID" "Sequence.ID" $outdir/change_o/change-o-db-defined_clones.txt 2>&1
@@ -495,8 +496,8 @@ if [[ "$fast" == "no" ]] ; then
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGA.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-defined_clones-summary-IGA.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-db-defined_first_clones-IGA.txt 2>&1
 		
-    python $dir/split_imgt_file.py --outdir . --prefix new_IMGT_IGA_first_seq_of_clone \
-      $outdir new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGA.txt \
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGA_first_seq_of_clone \
+      $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGA.txt \
       "-"
 
 	else
@@ -509,8 +510,8 @@ if [[ "$fast" == "no" ]] ; then
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGG.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-defined_clones-summary-IGG.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-db-defined_first_clones-IGG.txt 2>&1
 		
-    python $dir/split_imgt_file.py --outdir . --prefix new_IMGT_IGG_first_seq_of_clone \
-      $outdir new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGG.txt \
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGG_first_seq_of_clone \
+       $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGG.txt \
       "-"
 
 	else
@@ -523,8 +524,8 @@ if [[ "$fast" == "no" ]] ; then
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGM.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-defined_clones-summary-IGM.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-db-defined_first_clones-IGM.txt 2>&1
 		
-    python $dir/split_imgt_file.py --outdir . --prefix new_IMGT_IGM_first_seq_of_clone \
-      $outdir new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGM.txt \
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGM_first_seq_of_clone \
+      $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGM.txt \
       "-"
 
 	else
@@ -537,8 +538,8 @@ if [[ "$fast" == "no" ]] ; then
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGE.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-defined_clones-summary-IGE.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-db-defined_first_clones-IGE.txt 2>&1
 		
-    python $dir/split_imgt_file.py --outdir . --prefix new_IMGT_IGE_first_seq_of_clone \
-      $outdir new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGE.txt \
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGE_first_seq_of_clone \
+      $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGE.txt \
       "-"
 
 	else
