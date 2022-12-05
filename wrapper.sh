@@ -495,9 +495,6 @@ if [[ "$fast" == "no" ]] ; then
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGA.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-defined_clones-summary-IGA.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-db-defined_first_clones-IGA.txt 2>&1
 		
-		mkdir $outdir/new_IMGT_IGA_changeo
-		cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA_changeo
-
     python $dir/split_imgt_file.py --outdir . --prefix new_IMGT_IGA_first_seq_of_clone \
       $outdir new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGA.txt \
       "-"
