@@ -1,3 +1,7 @@
+version 1.5.0
+-------------
++ Faster IMGT TAR archive creation.
+
 version 1.4.0
 -------------
 + Fix a bug where synonymous mutations where incorrectly parsed.
