@@ -354,7 +354,12 @@ then
 	echo "<a href='aa_histogram_IGE.pdf'><img src='aa_histogram_IGE.png'/></a><br />" >> $output
 fi
 
-
+count_imgt_lines () {
+  tar -xJf $1 1_Summary.txt
+  # Use a pipe so wc -l does not display the filename
+  wc -l < 1_Summary.txt
+  rm 1_Summary.txt
+}
 
 if [[ "$fast" == "no" ]] ; then
 
@@ -379,7 +384,7 @@ if [[ "$fast" == "no" ]] ; then
 	echo "<p>${header_substring}</p></center>" >> $output
 
 	mkdir $outdir/baseline/IGA_IGG_IGM
-	if [[ $(wc -l < $outdir/new_IMGT/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGA_IGG_IGM
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT.txz "IGA_IGG_IGM_IGE" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline.pdf" "Sequence.ID" "$outdir/baseline.txt"
 	else
@@ -387,7 +392,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGA
-	if [[ $(wc -l < $outdir/new_IMGT_IGA/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGA.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGA
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGA.txz "IGA" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGA.pdf" "Sequence.ID" "$outdir/baseline_IGA.txt"
 	else
@@ -395,7 +400,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGG
-	if [[ $(wc -l < $outdir/new_IMGT_IGG/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGG.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGG
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGG.txz "IGG" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGG.pdf" "Sequence.ID" "$outdir/baseline_IGG.txt"
 	else
@@ -403,7 +408,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGM
-	if [[ $(wc -l < $outdir/new_IMGT_IGM/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGM.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGM
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGM.txz "IGM" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGM.pdf" "Sequence.ID" "$outdir/baseline_IGM.txt"
 	else
@@ -411,7 +416,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGE
-	if [[ $(wc -l < $outdir/new_IMGT_IGE/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGE.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGE
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGE.txz "IGE" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGE.pdf" "Sequence.ID" "$outdir/baseline_IGE.txt"
 	else
@@ -491,7 +496,7 @@ if [[ "$fast" == "no" ]] ; then
 	Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/merged.txt "all" "Sequence.ID,best_match" "SEQUENCE_ID" "Sequence.ID" $outdir/change_o/change-o-db-defined_clones.txt 2>&1
 	echo "Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/$outdir/merged.txt 'all' 'Sequence.ID,best_match' 'Sequence.ID' 'Sequence.ID' '\t' $outdir/change_o/change-o-db-defined_clones.txt 2>&1"
 	
-	if [[ $(wc -l < $outdir/new_IMGT_IGA/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGA.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGA.txz false false false $outdir/change_o/change-o-db-IGA.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGA.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-defined_clones-summary-IGA.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-db-defined_first_clones-IGA.txt 2>&1
@@ -505,7 +510,7 @@ if [[ "$fast" == "no" ]] ; then
 		echo "No IGA sequences" > "$outdir/change_o/change-o-defined_clones-summary-IGA.txt"
 	fi
 	
-	if [[ $(wc -l < $outdir/new_IMGT_IGG/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGG.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGG.txz false false false $outdir/change_o/change-o-db-IGG.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGG.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-defined_clones-summary-IGG.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-db-defined_first_clones-IGG.txt 2>&1
@@ -519,7 +524,7 @@ if [[ "$fast" == "no" ]] ; then
 		echo "No IGG sequences" > "$outdir/change_o/change-o-defined_clones-summary-IGG.txt"
 	fi
 
-	if [[ $(wc -l < $outdir/new_IMGT_IGM/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGM.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGM.txz false false false $outdir/change_o/change-o-db-IGM.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGM.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-defined_clones-summary-IGM.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-db-defined_first_clones-IGM.txt 2>&1
@@ -533,7 +538,7 @@ if [[ "$fast" == "no" ]] ; then
 		echo "No IGM sequences" > "$outdir/change_o/change-o-defined_clones-summary-IGM.txt"
 	fi
 
-	if [[ $(wc -l < $outdir/new_IMGT_IGE/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGE.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGE.txz false false false $outdir/change_o/change-o-db-IGE.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGE.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-defined_clones-summary-IGE.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-db-defined_first_clones-IGE.txt 2>&1
