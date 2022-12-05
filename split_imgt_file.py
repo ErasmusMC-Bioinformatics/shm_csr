@@ -18,16 +18,23 @@ def merged_txt_to_match_dict(merged: str):
     with open(merged, "rt") as f:
         header = next(f).strip("\n")
         column_names = header.split("\t")
-        best_match_index = column_names.index("best_match")
+        # For the baseline result there is no best_match column
+        if "best_match" in column_names:
+            best_match_index = column_names.index("best_match")
+        else:
+            best_match_index = None
         sequence_id_index = column_names.index("Sequence.ID")
         match_dict = {}
         for line in f:
             values = line.strip().split("\t")
             sequence_id = values[sequence_id_index]
-            best_match = values[best_match_index]
-            if "unmatched" in best_match:
-                # For some reason the table has values such as: unmatched, IGA2
-                continue
+            if best_match_index is not None:
+                best_match = values[best_match_index]
+                if "unmatched" in best_match:
+                    # For some reason the table has values such as: unmatched, IGA2
+                    continue
+            else:
+                best_match = ""
             match_dict[sequence_id] = best_match
     return match_dict
 
