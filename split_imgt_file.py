@@ -40,6 +40,7 @@ def merged_txt_to_match_dict(merged: str):
 
 
 def imgt_to_tables(imgt_file: str) -> Iterator[Tuple[str, io.TextIOWrapper]]:
+    print(f"opening IMGT file: {imgt_file}")
     with tarfile.open(imgt_file, "r") as archive:
         while True:
             member = archive.next()
@@ -75,7 +76,7 @@ def split_imgt(imgt_file: str, merged_file: str, outdir: str, genes: List[str],
         gene_dirpath = os.path.join(outdir, gene_dir)
         os.mkdir(gene_dirpath)
         gene_outdirs.append(gene_dirpath)
-        new_filename = f"new_IMGT_{gene}.txz" if gene else "new_IMGT.txz"
+        new_filename = f"{prefix}_{gene}.txz" if gene else f"{prefix}.txz"
         gene_tarfiles.append(
             tarfile.open(os.path.join(outdir, new_filename), mode="w:xz")
         )
