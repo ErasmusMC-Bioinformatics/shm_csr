@@ -48,7 +48,8 @@ def imgt_to_tables(imgt_file: str) -> Iterator[Tuple[str, io.TextIOWrapper]]:
             f_text.close()
 
 
-def split_imgt(imgt_file: str , merged_file: str, outdir: str, genes: List[str]):
+def split_imgt(imgt_file: str, merged_file: str, outdir: str, genes: List[str],
+               prefix: str):
     """
     This function creates a separate tar file for each of the gene matches
     based on the merged file. Unmatched genes are left out.
@@ -65,7 +66,7 @@ def split_imgt(imgt_file: str , merged_file: str, outdir: str, genes: List[str])
     for gene in genes:
         if gene == "-":
             gene = ""
-        gene_dir = f"new_IMGT_{gene}" if gene else "new_IMGT"
+        gene_dir = f"{prefix}_{gene}" if gene else f"{prefix}"
         gene_dirpath = os.path.join(outdir, gene_dir)
         os.mkdir(gene_dirpath)
         gene_outdirs.append(gene_dirpath)
@@ -125,6 +126,8 @@ def argument_parser() -> argparse.ArgumentParser:
         "genes",
         nargs="+",
         help="The genes to split out. Use '-' for all identified genes.")
+    parser.add_argument("--prefix", help="Prefix for the archives and "
+                                         "directories")
     return parser
 
 
