@@ -92,7 +92,8 @@ if [[ "${naive_output}" == "yes" ]] || [[ "$fast" == "no" ]] ; then
 	echo "---------------- creating new IMGT zips ----------------"
 	echo "---------------- creating new IMGT zips ----------------<br />" >> $log
 
-	python $dir/split_imgt_file.py $input $outdir/merged.txt --outdir $outdir
+	python $dir/split_imgt_file.py --outdir $outdir $input $outdir/merged.txt \
+	  - IGA IGA1 IGA2 IGG IGG1 IGG2 IGG3 IGG4 IGM IGE
 
 fi
 
