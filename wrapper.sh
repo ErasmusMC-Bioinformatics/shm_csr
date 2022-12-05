@@ -553,18 +553,6 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	cd "$tmp"
-	
-	rm -rf $outdir/new_IMGT
-	rm -rf $outdir/new_IMGT_IGA/
-	rm -rf $outdir/new_IMGT_IGA1/
-	rm -rf $outdir/new_IMGT_IGA2/
-	rm -rf $outdir/new_IMGT_IGG/
-	rm -rf $outdir/new_IMGT_IGG1/
-	rm -rf $outdir/new_IMGT_IGG2/
-	rm -rf $outdir/new_IMGT_IGG3/
-	rm -rf $outdir/new_IMGT_IGG4/
-	rm -rf $outdir/new_IMGT_IGM/
-	rm -rf $outdir/new_IMGT_IGE/
 
 	echo "<div class='tabbertab' title='Clonal Relation' style='width: 7000px;'>" >> $output #clonality tab
 
