@@ -91,10 +91,7 @@ def to_bool_str(cond):
 
 
 def sequence_overview(before_unique: str,
-                      merged: str,
                       outdir: str,
-                      gene_classes: List[str],
-                      hotspot_analysis_sum: str,
                       empty_region_filter: str):
     os.makedirs(outdir, exist_ok=True)
     sequence_columns = [
@@ -239,10 +236,7 @@ def sequence_overview(before_unique: str,
 def argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("--before-unique", help="File with the overview before unique filters")
-    parser.add_argument("--merged", help="Merged.txt")
     parser.add_argument("--outdir", help="Output directory")
-    parser.add_argument("--gene-classes", help="Comma-separated list of gene classes")
-    parser.add_argument("--hotspot-analysis-sum", help="hotspot-analysis-sum.txt")
     parser.add_argument("--empty-region-filter")
     return parser
 
@@ -250,12 +244,8 @@ def argument_parser() -> argparse.ArgumentParser:
 def main():
     args = argument_parser().parse_args()
     sequence_overview(args.before_unique,
-                      args.merged,
                       args.outdir,
-                      args.gene_classes.split(","),
-                      args.hotspot_analysis_sum,
-                      args.empty_region_filter,
-                      )
+                      args.empty_region_filter)
 
 
 if __name__ == "__main__":
