@@ -126,7 +126,8 @@ def sequence_overview(before_unique: str,
                         "this table only sequences occuring more than once "
                         "are included. </center>")
         main_html.write("<table border='1' class='pure-table pure-table-striped'>")
-        main_html.write(f"<caption>{'+'.join(sequence_columns)} sequences "
+        main_html.write(f"<caption>"
+                        f"{'+'.join(column.split('.')[0] for column in sequence_columns)} sequences "
                         f"that show up more than once</caption>")
         main_html.write("<tr>")
         main_html.write("<th>Sequence</th><th>Functionality</th><th>IGA1</th>"
@@ -156,7 +157,7 @@ def sequence_overview(before_unique: str,
         some_unmatched = 0  # one or more sequences in a clone are unmatched
         matched = 0  # should be the same als matched sequences
 
-        for i, sequence in enumerate(sorted_sequences):
+        for i, sequence in enumerate(sorted_sequences, start=1):
             sequence_stat: SequenceStats = sequence_stats[sequence]
             count_dict = sequence_stat.counts
             class_sum = sum(count_dict.values())

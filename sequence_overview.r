@@ -67,7 +67,7 @@ tbl = function(df) {
 	for(i in 1:nrow(df)){ 
 		res = paste(res, tr(df[i,]), sep="")
 	}
-	res = paste(res, "</table>\n")
+	res = paste(res, "</table>\n", sep="")
 }
 
 cat("<center><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAzElEQVQoka2TwQ2CQBBFpwTshw4ImW8ogJMlUIMmhNCDxgasAi50oSXA8XlAjCG7aqKTzGX/vsnM31mzR0gk7tTudO5MEizpzvQ4ryUSe408J3Xn+grE0p1rnpOamVmWsZG4rS+dzzAMsN8Hi9yyjI1JNGtxu4VxBJgLRLpoTKIPiW0LlwtUVRTubW2OBGUJu92cZRmdfbKQMAw8o+vi5v0fLorZ7Y9waGYJjsf38DJz0O1PsEQffOcv4Sa6YYfDDJ5Obzbsp93+5VfdATueO1fdLdI0AAAAAElFTkSuQmCC'> Please note that this tab is based on all sequences before filter unique sequences and the remove duplicates based on filters are applied. In this table only sequences occuring more than once are included. </center>", file=main.html, append=F)
@@ -259,7 +259,7 @@ for(i in 1:nrow(dat)){
 	
 	for(i in 1:nrow(allc)){ #generate html by id
 		html = make.link(id, allc[i,"best_match"], allc[i,"Sequence.ID"])
-		cat(paste(html, "<br />\n"), file=sequence.id.page, append=T)
+		cat(paste(html, "<br />\n", sep=""), file=sequence.id.page, append=T)
 	}
 }
 
