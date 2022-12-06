@@ -75,8 +75,8 @@ def tr(val: Iterable[str]):
     return f"<tr>{''.join(td(v) for v in val)}</tr>"
 
 
-def make_link(ident, clss, val):
-    return f"<a href='{clss}_{ident}.html'>{val}</a>"
+def make_link(link, val):
+    return f"<a href='{link}'>{val}</a>"
 
 
 def tbl(df: Iterable[Iterable[str]]):
@@ -143,7 +143,7 @@ def sequence_overview(before_unique: str,
         some_unmatched = 0  # one or more sequences in a clone are unmatched
         matched = 0  # should be the same als matched sequences
 
-        for id, sequence in enumerate(sorted_sequences):
+        for i, sequence in enumerate(sorted_sequences):
             sequence_stat: SequenceStats = sequence_stats[sequence]
             count_dict = sequence_stat.counts
             class_sum = sum(count_dict.values())
@@ -163,11 +163,14 @@ def sequence_overview(before_unique: str,
                 in_multiple += 1
             functionality = ",".join(row.functionality
                                      for row in sequence_stat.table_rows)
+            links: Dict[str, str] = {}
             for key, value in count_dict.items():
+                html_file = f"{key}_{i}.html"
+                links[key] = html_file
                 if value > 0:
                     rows = (row for row in sequence_stat.table_rows
                             if row.best_match == key)
-                    Path(outdir, f"{key}_{id}.html").write_text(tbl(rows))
+                    Path(outdir, html_file).write_text(tbl(rows))
 
 
 
