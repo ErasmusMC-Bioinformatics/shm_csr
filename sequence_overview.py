@@ -4,25 +4,34 @@
 
 import argparse
 import os
+import typing
 from collections import defaultdict
+from pathlib import Path
 from typing import Dict, Iterable, List
 
 
+class SequenceTableRow(typing.NamedTuple):
+    sequence_id: str
+    sequence: str
+    best_match: str
+    functionality: str
+
+
 class SequenceStats:
-    __slots__ = ("counts", "functionality", "table_rows")
+    __slots__ = ("counts", "table_rows")
 
     def __init__(self):
-        self.counts = {"IGA1": 0,
-                       "IGA2": 0,
-                       "IGE": 0,
-                       "IGG1": 0,
-                       "IGG2": 0,
-                       "IGG3": 0,
-                       "IGG4": 0,
-                       "IGM": 0,
-                       "unmatched": 0}
-        self.functionality = []
-        self.table_rows = []
+        self.counts: Dict[str, int] = {
+            "IGA1": 0,
+            "IGA2": 0,
+            "IGE": 0,
+            "IGG1": 0,
+            "IGG2": 0,
+            "IGG3": 0,
+            "IGG4": 0,
+            "IGM": 0,
+            "unmatched": 0}
+        self.table_rows: List[SequenceTableRow] = []
 
 
 def get_sequence_stats(before_unique: str,
@@ -38,9 +47,9 @@ def get_sequence_stats(before_unique: str,
             best_match = row_dict["best_match"]
             sequence_statistics[sequence].counts[best_match] += 1
             functionality = row_dict["Functionality"]
-            sequence_statistics[sequence].functionality.append(functionality)
             sequence_statistics[sequence].table_rows.append(
-                (row_dict["Sequence ID"], sequence, best_match, functionality))
+                SequenceTableRow(row_dict["Sequence ID"], sequence,
+                                 best_match, functionality))
     return sequence_statistics
 
 
@@ -62,15 +71,15 @@ def td(val):
     return f"<td bgcolor='{get_background_color(val)}'>{val}</td>"
 
 
-def tr(val):
+def tr(val: Iterable[str]):
     return f"<tr>{''.join(td(v) for v in val)}</tr>"
 
 
-def make_link(id, clss, val):
-    return f"<a href='{clss}_{id}.html'>{val}</a>"
+def make_link(ident, clss, val):
+    return f"<a href='{clss}_{ident}.html'>{val}</a>"
 
 
-def tbl(df: Iterable[str]):
+def tbl(df: Iterable[Iterable[str]]):
     return f"<table border='1'>{''.join(tr(v) for v in df)}</table>"
 
 
@@ -152,8 +161,13 @@ def sequence_overview(before_unique: str,
                 some_unmatched += 1
             else:
                 in_multiple += 1
-            functionality = ",".join(sequence_stat.functionality)
-
+            functionality = ",".join(row.functionality
+                                     for row in sequence_stat.table_rows)
+            for key, value in count_dict.items():
+                if value > 0:
+                    rows = (row for row in sequence_stat.table_rows
+                            if row.best_match == key)
+                    Path(outdir, f"{key}_{id}.html").write_text(tbl(rows))
 
 
 
