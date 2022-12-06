@@ -165,7 +165,8 @@ def sequence_overview(before_unique: str,
             if count_dict["unmatched"] == class_sum:
                 unmatched += 1
                 continue
-            in_classes = len([value for value in count_dict.values() if value > 0])
+            in_classes = sum(1 for key, value in count_dict.items()
+                             if value > 0 and key != "unmatched")
             matched += in_classes
             if any(value == class_sum for value in count_dict.values()):
                 multiple_in_one += 1
