@@ -4,14 +4,25 @@
 
 import argparse
 import os
-import typing
 from collections import defaultdict
 from typing import Dict, Iterable, List
 
 
-class SequenceStats(typing.NamedTuple):
-    counts: Dict[str, int] = defaultdict(lambda: 0)
-    functionality: List[str] = list()
+class SequenceStats:
+    __slots__ = ("counts", "functionality", "table_rows")
+
+    def __init__(self):
+        self.counts = {"IGA1": 0,
+                       "IGA2": 0,
+                       "IGE": 0,
+                       "IGG1": 0,
+                       "IGG2": 0,
+                       "IGG3": 0,
+                       "IGG4": 0,
+                       "IGM": 0,
+                       "unmatched": 0}
+        self.functionality = []
+        self.table_rows = []
 
 
 def get_sequence_stats(before_unique: str,
@@ -26,8 +37,10 @@ def get_sequence_stats(before_unique: str,
             sequence = "".join(row_dict[column] for column in sequence_columns)
             best_match = row_dict["best_match"]
             sequence_statistics[sequence].counts[best_match] += 1
-            sequence_statistics[sequence].functionality.append(
-                row_dict["Functionality"])
+            functionality = row_dict["Functionality"]
+            sequence_statistics[sequence].functionality.append(functionality)
+            sequence_statistics[sequence].table_rows.append(
+                (row_dict["Sequence ID"], sequence, best_match, functionality))
     return sequence_statistics
 
 
@@ -140,6 +153,7 @@ def sequence_overview(before_unique: str,
             else:
                 in_multiple += 1
             functionality = ",".join(sequence_stat.functionality)
+
 
 
 
