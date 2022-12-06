@@ -56,7 +56,7 @@ td = function(val) {
   return(paste("<td bgcolor='", get.bg.color(val), "'>", val, "</td>", sep=""))
 }
 tr = function(val) { 
-	return(paste(c("<tr>", sapply(val, td), "</tr>"), collapse="")) 
+	return(paste(c("<tr>", sapply(val, td), "</tr>\n"), collapse=""))
 }
 
 make.link = function(id, clss, val) { 
@@ -67,7 +67,7 @@ tbl = function(df) {
 	for(i in 1:nrow(df)){ 
 		res = paste(res, tr(df[i,]), sep="")
 	}
-	res = paste(res, "</table>")
+	res = paste(res, "</table>\n")
 }
 
 cat("<center><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAzElEQVQoka2TwQ2CQBBFpwTshw4ImW8ogJMlUIMmhNCDxgasAi50oSXA8XlAjCG7aqKTzGX/vsnM31mzR0gk7tTudO5MEizpzvQ4ryUSe408J3Xn+grE0p1rnpOamVmWsZG4rS+dzzAMsN8Hi9yyjI1JNGtxu4VxBJgLRLpoTKIPiW0LlwtUVRTubW2OBGUJu92cZRmdfbKQMAw8o+vi5v0fLorZ7Y9waGYJjsf38DJz0O1PsEQffOcv4Sa6YYfDDJ5Obzbsp93+5VfdATueO1fdLdI0AAAAAElFTkSuQmCC'> Please note that this tab is based on all sequences before filter unique sequences and the remove duplicates based on filters are applied. In this table only sequences occuring more than once are included. </center>", file=main.html, append=F)
@@ -88,7 +88,7 @@ cat("<th>Sequence</th><th>Functionality</th><th>IGA1</th><th>IGA2</th><th>IGG1</
 cat("<th>total IGA</th><th>total IGG</th><th>total IGM</th><th>total IGE</th><th>number of subclasses</th><th>present in both IGA and IGG</th><th>present in IGA, IGG and IGM</th><th>present in IGA, IGG and IGE</th><th>present in IGA, IGG, IGM and IGE</th><th>IGA1+IGA2</th>", file=main.html, append=T)
 cat("<th>IGG1+IGG2</th><th>IGG1+IGG3</th><th>IGG1+IGG4</th><th>IGG2+IGG3</th><th>IGG2+IGG4</th><th>IGG3+IGG4</th>", file=main.html, append=T)
 cat("<th>IGG1+IGG2+IGG3</th><th>IGG2+IGG3+IGG4</th><th>IGG1+IGG2+IGG4</th><th>IGG1+IGG3+IGG4</th><th>IGG1+IGG2+IGG3+IGG4</th>", file=main.html, append=T)
-cat("</tr>", file=main.html, append=T)
+cat("</tr>\n", file=main.html, append=T)
 
 
 
@@ -259,7 +259,7 @@ for(i in 1:nrow(dat)){
 	
 	for(i in 1:nrow(allc)){ #generate html by id
 		html = make.link(id, allc[i,"best_match"], allc[i,"Sequence.ID"])
-		cat(paste(html, "<br />"), file=sequence.id.page, append=T)
+		cat(paste(html, "<br />\n"), file=sequence.id.page, append=T)
 	}
 }
 

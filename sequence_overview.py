@@ -74,7 +74,7 @@ def td(val):
 
 
 def tr(val: Iterable[str]):
-    return f"<tr>{''.join(td(v) for v in val)}</tr>"
+    return f"<tr>{''.join(td(v) for v in val)}</tr>\n"
 
 
 def make_link(link, val):
@@ -82,7 +82,7 @@ def make_link(link, val):
 
 
 def tbl(df: Iterable[Iterable[str]]):
-    return f"<table border='1'>{''.join(tr(v) for v in df)}</table>"
+    return f"<table border='1'>{''.join(tr(v) for v in df)}</table>\n"
 
 
 def to_bool_str(cond):
@@ -145,7 +145,7 @@ def sequence_overview(before_unique: str,
         main_html.write("<th>IGG1+IGG2+IGG3</th><th>IGG2+IGG3+IGG4</th>"
                         "<th>IGG1+IGG2+IGG4</th><th>IGG1+IGG3+IGG4</th>"
                         "<th>IGG1+IGG2+IGG3+IGG4</th>")
-        main_html.write("</tr>")
+        main_html.write("</tr>\n")
         sequence_stats = get_sequence_stats(before_unique, sequence_columns)
         sorted_sequences = sorted(sequence_stats.keys())
 
@@ -186,7 +186,7 @@ def sequence_overview(before_unique: str,
                             if row.best_match == key]
                     Path(outdir, html_file).write_text(tbl(rows))
                     for row in rows:
-                        by_id.write(make_link(html_file, row.sequence_id) + "<br />")
+                        by_id.write(make_link(html_file, row.sequence_id) + "<br />\n")
             iga_count = count_dict["IGA1"] + count_dict["IGA2"]
             igg_count =  count_dict["IGG1"] + count_dict["IGG2"] + \
                 count_dict["IGG3"] + count_dict["IGG4"]
