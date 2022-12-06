@@ -173,8 +173,11 @@ def sequence_overview(before_unique: str,
                 some_unmatched += 1
             else:
                 in_multiple += 1
-            functionality = ",".join({row.functionality
-                                      for row in sequence_stat.table_rows})
+            # Use a dict so we can preserve the order and get all the unique
+            # items. With a set the order is not preserved.
+            functionality_dict = {row.functionality: None
+                                  for row in sequence_stat.table_rows}
+            functionality = ",".join(functionality_dict.keys())
             links: Dict[str, str] = {}
             for key, value in count_dict.items():
                 name_key = "un" if key == "unmatched" else key
