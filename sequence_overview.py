@@ -83,6 +83,10 @@ def tbl(df: Iterable[Iterable[str]]):
     return f"<table border='1'>{''.join(tr(v) for v in df)}</table>"
 
 
+def to_bool_str(cond):
+    return "TRUE" if cond else "FALSE"
+
+
 def sequence_overview(before_unique: str,
                       merged: str,
                       outdir: str,
@@ -90,7 +94,6 @@ def sequence_overview(before_unique: str,
                       hotspot_analysis_sum: str,
                       empty_region_filter: str):
     os.makedirs(outdir, exist_ok=True)
-    main_html_file = os.path.join(outdir, "index.html")
     sequence_columns = [
         "FR1.IMGT.seq", "CDR1.IMGT.seq", "FR2.IMGT.seq", "CDR2.IMGT.seq",
         "FR3.IMGT.seq", "CDR3.IMGT.seq"]
@@ -104,7 +107,9 @@ def sequence_overview(before_unique: str,
         sequence_columns = sequence_columns[3:]
     else:
         raise ValueError(f"Unknown region filter: {empty_region_filter}")
-    with open(main_html_file, "wt") as main_html:
+    main_html_file = os.path.join(outdir, "index.html")
+    by_id_file = os.path.join(outdir, "by_id.html")
+    with open(main_html_file, "wt") as main_html, open(by_id_file, "wt") as by_id:
         main_html.write("<center><img src='data:image/png;base64,"
                         "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAzElEQ"
                         "VQoka2TwQ2CQBBFpwTshw4ImW8ogJMlUIMmhNCDxgasAi50oSXA8X"
@@ -165,13 +170,60 @@ def sequence_overview(before_unique: str,
                                      for row in sequence_stat.table_rows)
             links: Dict[str, str] = {}
             for key, value in count_dict.items():
-                html_file = f"{key}_{i}.html"
+                name_key = "un" if key == "unmatched" else key
+                html_file = f"{name_key}_{i}.html"
                 links[key] = html_file
                 if value > 0:
-                    rows = (row for row in sequence_stat.table_rows
-                            if row.best_match == key)
+                    rows = [row for row in sequence_stat.table_rows
+                            if row.best_match == key]
                     Path(outdir, html_file).write_text(tbl(rows))
+                    for row in rows:
+                        by_id.write(make_link(html_file, row.sequence_id) + "<br />")
+            iga_count = count_dict["IGA1"] + count_dict["IGA2"]
+            igg_count =  count_dict["IGG1"] + count_dict["IGG2"] + \
+                count_dict["IGG3"] + count_dict["IGG4"],
 
+            contained_classes = set(key for key, value in count_dict if value > 0)
+            if iga_count:
+                contained_classes.add("IGA")
+            if igg_count:
+                contained_classes.add("IGG")
+            main_row = [
+                sequence, functionality,
+                make_link(links["IGA1"], count_dict["IGA1"]),
+                make_link(links["IGA2"], count_dict["IGA2"]),
+                make_link(links["IGG1"], count_dict["IGG1"]),
+                make_link(links["IGG2"], count_dict["IGG2"]),
+                make_link(links["IGG3"], count_dict["IGG3"]),
+                make_link(links["IGG4"], count_dict["IGG4"]),
+                make_link(links["IGM"], count_dict["IGM"]),
+                make_link(links["IGE"], count_dict["IGE"]),
+                make_link(links["unmatched"], count_dict["unmatched"]),
+                make_link(links["IGA1"], count_dict["IGA1"]),
+                iga_count,
+                igg_count,
+                count_dict["IGM"],
+                count_dict["IGE"],
+                in_classes,
+                to_bool_str({"IGA", "IGG"}.issubset(contained_classes)),
+                to_bool_str({"IGA", "IGG", "IGM"}.issubset(contained_classes)),
+                to_bool_str({"IGA", "IGG", "IGE"}.issubset(contained_classes)),
+                to_bool_str({"IGA", "IGG", "IGM", "IGE"}.issubset(contained_classes)),
+                to_bool_str({"IGA1", "IGA2"}.issubset(contained_classes)),
+                to_bool_str({"IGG1", "IGG2"}.issubset(contained_classes)),
+                to_bool_str({"IGG1", "IGG3"}.issubset(contained_classes)),
+                to_bool_str({"IGG1", "IGG4"}.issubset(contained_classes)),
+                to_bool_str({"IGG2", "IGG3"}.issubset(contained_classes)),
+                to_bool_str({"IGG2", "IGG4"}.issubset(contained_classes)),
+                to_bool_str({"IGG3", "IGG4"}.issubset(contained_classes)),
+                to_bool_str({"IGG1", "IGG2", "IGG3"}.issubset(contained_classes)),
+                to_bool_str({"IGG2", "IGG3", "IGG4"}.issubset(contained_classes)),
+                to_bool_str({"IGG1", "IGG2", "IGG4"}.issubset(contained_classes)),
+                to_bool_str({"IGG1", "IGG3", "IGG4"}.issubset(contained_classes)),
+                to_bool_str({"IGG1", "IGG2", "IGG3", "IGG4"}.issubset(contained_classes)),
+            ]
+            main_html.write(tr(main_row))
+        main_html.write("</table>")
 
 
 def argument_parser() -> argparse.ArgumentParser:
