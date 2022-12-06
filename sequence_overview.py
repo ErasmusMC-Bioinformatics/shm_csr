@@ -43,12 +43,14 @@ def get_sequence_stats(before_unique: str,
         for line in table:
             values = line.strip("\n").split("\t")
             row_dict = dict(zip(header_columns, values))
-            sequence = "".join(row_dict[column] for column in sequence_columns)
+            sequence = " ".join(row_dict[column] for column in sequence_columns)
             best_match = row_dict["best_match"]
+            if best_match.startswith("unmatched"):
+                best_match = "unmatched"
             sequence_statistics[sequence].counts[best_match] += 1
             functionality = row_dict["Functionality"]
             sequence_statistics[sequence].table_rows.append(
-                SequenceTableRow(row_dict["Sequence ID"], sequence,
+                SequenceTableRow(row_dict["Sequence.ID"], sequence,
                                  best_match, functionality))
     return sequence_statistics
 
@@ -137,6 +139,12 @@ def sequence_overview(before_unique: str,
                         "<th>present in IGA, IGG and IGE</th>"
                         "<th>present in IGA, IGG, IGM and IGE</th>"
                         "<th>IGA1+IGA2</th>")
+        main_html.write("<th>IGG1+IGG2</th><th>IGG1+IGG3</th>"
+                        "<th>IGG1+IGG4</th><th>IGG2+IGG3</th>"
+                        "<th>IGG2+IGG4</th><th>IGG3+IGG4</th>")
+        main_html.write("<th>IGG1+IGG2+IGG3</th><th>IGG2+IGG3+IGG4</th>"
+                        "<th>IGG1+IGG2+IGG4</th><th>IGG1+IGG3+IGG4</th>"
+                        "<th>IGG1+IGG2+IGG3+IGG4</th>")
         main_html.write("</tr>")
         sequence_stats = get_sequence_stats(before_unique, sequence_columns)
         sorted_sequences = sorted(sequence_stats.keys())
@@ -158,7 +166,7 @@ def sequence_overview(before_unique: str,
             if count_dict["unmatched"] == class_sum:
                 unmatched += 1
                 continue
-            in_classes = len([key for key in count_dict.keys() if key != "unmatched"])
+            in_classes = len([value for value in count_dict.values() if value > 0])
             matched += in_classes
             if any(value == class_sum for value in count_dict.values()):
                 multiple_in_one += 1
@@ -166,8 +174,8 @@ def sequence_overview(before_unique: str,
                 some_unmatched += 1
             else:
                 in_multiple += 1
-            functionality = ",".join(row.functionality
-                                     for row in sequence_stat.table_rows)
+            functionality = ",".join({row.functionality
+                                      for row in sequence_stat.table_rows})
             links: Dict[str, str] = {}
             for key, value in count_dict.items():
                 name_key = "un" if key == "unmatched" else key
@@ -181,9 +189,10 @@ def sequence_overview(before_unique: str,
                         by_id.write(make_link(html_file, row.sequence_id) + "<br />")
             iga_count = count_dict["IGA1"] + count_dict["IGA2"]
             igg_count =  count_dict["IGG1"] + count_dict["IGG2"] + \
-                count_dict["IGG3"] + count_dict["IGG4"],
+                count_dict["IGG3"] + count_dict["IGG4"]
 
-            contained_classes = set(key for key, value in count_dict if value > 0)
+            contained_classes = set(key for key, value
+                                    in count_dict.items() if value > 0)
             if iga_count:
                 contained_classes.add("IGA")
             if igg_count:
@@ -199,7 +208,6 @@ def sequence_overview(before_unique: str,
                 make_link(links["IGM"], count_dict["IGM"]),
                 make_link(links["IGE"], count_dict["IGE"]),
                 make_link(links["unmatched"], count_dict["unmatched"]),
-                make_link(links["IGA1"], count_dict["IGA1"]),
                 iga_count,
                 igg_count,
                 count_dict["IGM"],
@@ -233,8 +241,6 @@ def argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--outdir", help="Output directory")
     parser.add_argument("--gene-classes", help="Comma-separated list of gene classes")
     parser.add_argument("--hotspot-analysis-sum", help="hotspot-analysis-sum.txt")
-    parser.add_argument("--nt-overview")
-    parser.add_argument("--nt-sum")
     parser.add_argument("--empty-region-filter")
     return parser
 
@@ -248,3 +254,7 @@ def main():
                       args.hotspot_analysis_sum,
                       args.empty_region_filter,
                       )
+
+
+if __name__ == "__main__":
+    main()
