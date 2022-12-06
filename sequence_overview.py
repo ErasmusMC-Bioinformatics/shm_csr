@@ -45,13 +45,14 @@ def get_sequence_stats(before_unique: str,
             row_dict = dict(zip(header_columns, values))
             sequence = " ".join(row_dict[column] for column in sequence_columns)
             best_match = row_dict["best_match"]
+            original_match = best_match
             if best_match.startswith("unmatched"):
                 best_match = "unmatched"
             sequence_statistics[sequence].counts[best_match] += 1
             functionality = row_dict["Functionality"]
             sequence_statistics[sequence].table_rows.append(
                 SequenceTableRow(row_dict["Sequence.ID"], sequence,
-                                 best_match, functionality))
+                                 original_match, functionality))
     return sequence_statistics
 
 
