@@ -182,7 +182,8 @@ def sequence_overview(before_unique: str,
                 links[key] = html_file
                 if value > 0:
                     rows = [row for row in sequence_stat.table_rows
-                            if row.best_match == key]
+                            # Startswith to also get unmatched columns
+                            if row.best_match.startswith(key)]
                     Path(outdir, html_file).write_text(tbl(rows))
                     for row in rows:
                         by_id.write(make_link(html_file, row.sequence_id) + "<br />\n")
