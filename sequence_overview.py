@@ -4,13 +4,19 @@
 
 import argparse
 import os
+import typing
 from collections import defaultdict
-from typing import Iterable, List
+from typing import Dict, Iterable, List
 
 
-def sequence_counter(before_unique: str,
-                     sequence_columns: List[str]):
-    sequence_counter = defaultdict(lambda: defaultdict(lambda: 0))
+class SequenceStats(typing.NamedTuple):
+    counts: Dict[str, int] = defaultdict(lambda: 0)
+    functionality: List[str] = list()
+
+
+def get_sequence_stats(before_unique: str,
+                       sequence_columns: List[str]):
+    sequence_statistics = defaultdict(SequenceStats)
     with open(before_unique, "rt") as table:
         header = next(table)
         header_columns = header.strip("\n").split("\t")
@@ -19,8 +25,10 @@ def sequence_counter(before_unique: str,
             row_dict = dict(zip(header_columns, values))
             sequence = "".join(row_dict[column] for column in sequence_columns)
             best_match = row_dict["best_match"]
-            sequence_counter[sequence][best_match] += 1
-    return sequence_counter
+            sequence_statistics[sequence].counts[best_match] += 1
+            sequence_statistics[sequence].functionality.append(
+                row_dict["Functionality"])
+    return sequence_statistics
 
 
 def get_background_color(value: str):
@@ -103,8 +111,8 @@ def sequence_overview(before_unique: str,
                         "<th>present in IGA, IGG, IGM and IGE</th>"
                         "<th>IGA1+IGA2</th>")
         main_html.write("</tr>")
-        sequence_count = sequence_counter(before_unique, sequence_columns)
-        sorted_sequences = sorted(sequence_count.keys())
+        sequence_stats = get_sequence_stats(before_unique, sequence_columns)
+        sorted_sequences = sorted(sequence_stats.keys())
 
         single_sequences = 0  # sequence only found once, skipped
         in_multiple = 0  # same sequence across multiple subclasses
@@ -114,7 +122,8 @@ def sequence_overview(before_unique: str,
         matched = 0  # should be the same als matched sequences
 
         for id, sequence in enumerate(sorted_sequences):
-            count_dict = sequence_count[sequence]
+            sequence_stat: SequenceStats = sequence_stats[sequence]
+            count_dict = sequence_stat.counts
             class_sum = sum(count_dict.values())
             if class_sum == 1:
                 single_sequences += 1
@@ -130,6 +139,8 @@ def sequence_overview(before_unique: str,
                 some_unmatched += 1
             else:
                 in_multiple += 1
+            functionality = ",".join(sequence_stat.functionality)
+
 
 
 def argument_parser() -> argparse.ArgumentParser:
