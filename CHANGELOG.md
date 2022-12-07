@@ -1,5 +1,8 @@
 version 1.5.0
 -------------
++ Faster sequence overview creation.
++ Fix a bug in sequence overview where links to unmatched sequences where not
+  working properly in the by_id.html file.
 + Faster IMGT TAR archive creation.
 
 version 1.4.0

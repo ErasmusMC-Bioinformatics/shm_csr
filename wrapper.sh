@@ -140,7 +140,9 @@ echo "---------------- sequence_overview.r ----------------<br />" >> $log
 
 mkdir $outdir/sequence_overview
 
-Rscript $dir/sequence_overview.r $outdir/before_unique_filter.txt $outdir/merged.txt $outdir/sequence_overview $classes $outdir/hotspot_analysis_sum.txt ${empty_region_filter} 2>&1
+python $dir/sequence_overview.py --before-unique $outdir/before_unique_filter.txt \
+  --outdir $outdir/sequence_overview --empty-region-filter ${empty_region_filter}
+Rscript $dir/nt_overview.r $outdir/merged.txt $outdir/sequence_overview $classes $outdir/hotspot_analysis_sum.txt ${empty_region_filter} 2>&1
 
 echo "<table border='1'>" > $outdir/base_overview.html
 
