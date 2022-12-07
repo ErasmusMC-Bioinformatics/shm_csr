@@ -11,7 +11,10 @@ def find_naive_mutations(mutation_file, naive_file, naive_memory_file,
                          percentage_cutoff=0.02):
     with (open(mutation_file, "rt") as mutations,
           open(naive_file, "wt") as naive,
-          open(naive_memory_file) as naive_memory,):
+          open(naive_memory_file, "wt") as naive_memory,):
+        header = next(mutations)
+        naive.write(header)
+        naive_memory.write(header)
         for line in mutations:
             sequence_id, best_match, mutation_no, region_length, _ = \
                 line.strip('\n').split('\t')
@@ -30,6 +33,9 @@ def main():
     parser.add_argument("mutation_file", help="scatter.txt")
     parser.add_argument("naive_file")
     parser.add_argument("naive_memory_file")
+    args = parser.parse_args()
+    find_naive_mutations(args.mutation_file, args.naive_file,
+                         args.naive_memory_file)
 
 
 if __name__ == "__main__":
