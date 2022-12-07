@@ -1,5 +1,3 @@
-library(reshape2)
-
 args <- commandArgs(trailingOnly = TRUE)
 
 merged.file = args[1]
@@ -74,33 +72,3 @@ names(hotspot.analysis.sum) = names(NTresult)
 hotspot.analysis.sum = rbind(hotspot.analysis.sum, NTresult)
 
 write.table(hotspot.analysis.sum, hotspot.analysis.sum.file, quote=F, sep=",", row.names=F, col.names=F, na="0")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
