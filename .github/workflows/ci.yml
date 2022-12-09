@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   pull_request:
   push:
-    branches: 
+    branches:
       - develop
       - master
 
@@ -18,3 +18,7 @@ jobs:
         run: pip install pytest
       - name: Run test.
         run: pytest tests/
+        env:
+          # Make sure everything works correctly by default.
+          # SHM_CSR_FAST: yes runs by default on the local test.
+          SHM_CSR_FAST: "no"
