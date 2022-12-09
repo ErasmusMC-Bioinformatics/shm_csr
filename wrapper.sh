@@ -110,11 +110,11 @@ python $dir/igm_naive_mutations.py $outdir/scatter.txt $outdir/igm_naive_mutatio
 
 python $dir/split_imgt_file.py --outdir $outdir $outdir/NEW_IMGT_IGM.txz \
   $outdir/igm_naive_mutations.txt \
-  --prefix new_IMGT_IGM_NAIVE.txt
+  --prefix new_IMGT_IGM_NAIVE.txt -
 
 python $dir/split_imgt_file.py --outdir $outdir $outdir/NEW_IMGT_IGM.txz \
   $outdir/igm_naive_memory_mutations.txt \
-  --prefix new_IMGT_IGM_NAIVE_MEMORY.txt
+  --prefix new_IMGT_IGM_NAIVE_MEMORY.txt -
 
 echo "---------------- plot_pdfs.r ----------------"
 echo "---------------- plot_pdfs.r ----------------<br />" >> $log
