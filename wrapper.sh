@@ -87,16 +87,13 @@ echo "---------------- merge_and_filter.r ----------------<br />" >> $log
 
 Rscript $dir/merge_and_filter.r $PWD/summary.txt $PWD/sequences.txt $PWD/mutationanalysis.txt $PWD/mutationstats.txt $PWD/hotspots.txt "$PWD/gapped_aa.txt" $outdir/identified_genes.txt $outdir/merged.txt $outdir/before_unique_filter.txt $outdir/unmatched.txt $method $functionality $unique ${filter_unique} ${filter_unique_count} ${class_filter} ${empty_region_filter} 2>&1
 
-if [[ "${naive_output}" == "yes" ]] || [[ "$fast" == "no" ]] ; then
+echo "---------------- creating new IMGT zips ----------------"
+echo "---------------- creating new IMGT zips ----------------<br />" >> $log
 
-	echo "---------------- creating new IMGT zips ----------------"
-	echo "---------------- creating new IMGT zips ----------------<br />" >> $log
+python $dir/split_imgt_file.py --outdir $outdir $input $outdir/merged.txt \
+  --prefix new_IMGT \
+  - IGA IGA1 IGA2 IGG IGG1 IGG2 IGG3 IGG4 IGM IGE
 
-	python $dir/split_imgt_file.py --outdir $outdir $input $outdir/merged.txt \
-	  --prefix new_IMGT \
-	  - IGA IGA1 IGA2 IGG IGG1 IGG2 IGG3 IGG4 IGM IGE
-
-fi
 
 echo "---------------- shm_csr.r ----------------"
 echo "---------------- shm_csr.r ----------------<br />" >> $log
@@ -104,6 +101,20 @@ echo "---------------- shm_csr.r ----------------<br />" >> $log
 classes="IGA,IGA1,IGA2,IGG,IGG1,IGG2,IGG3,IGG4,IGM,IGE,unmatched"
 echo "R mutation analysis"
 Rscript $dir/shm_csr.r $outdir/merged.txt $classes $outdir ${empty_region_filter} 2>&1
+
+echo "---------- Split naive memory IGM ---------"
+echo "---------- Split naive memory IGM ---------<br />" >> $log
+
+python $dir/igm_naive_mutations.py $outdir/scatter.txt $outdir/igm_naive_mutations.txt \
+  $outdir/igm_naive_memory_mutations.txt
+
+python $dir/split_imgt_file.py --outdir $outdir $outdir/NEW_IMGT_IGM.txz \
+  $outdir/igm_naive_mutations.txt \
+  --prefix new_IMGT_IGM_NAIVE.txt
+
+python $dir/split_imgt_file.py --outdir $outdir $outdir/NEW_IMGT_IGM.txz \
+  $outdir/igm_naive_memory_mutations.txt \
+  --prefix new_IMGT_IGM_NAIVE_MEMORY.txt
 
 echo "---------------- plot_pdfs.r ----------------"
 echo "---------------- plot_pdfs.r ----------------<br />" >> $log
