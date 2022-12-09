@@ -1,5 +1,9 @@
 version 1.6.0
 -------------
++ Two extra IMGT files are provided. One for IGM with less than 2% mutations
+  (naive) and one for IGM with more than 2% mutations (naive memory).
++ All IMGT files per sequence class are always provided regardless of how the 
+  ``Fast`` option is set. Previously this had to be set to ``no``.
 + Faster sequence overview creation.
 + Fix a bug in sequence overview where links to unmatched sequences where not
   working properly in the by_id.html file.
