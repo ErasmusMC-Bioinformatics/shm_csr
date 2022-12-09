@@ -69,7 +69,11 @@ def shm_csr_result():
     filter_unique_count = '2'
     class_filter = '70_70'
     empty_region_filter = 'FR1'
-    fast = 'no'
+    # Skip baseline and changeo by default. These tools cannot be modified
+    # anyway and take most of the test time to execute. The environment
+    # variable can be set to "no" on the CI so the code path is tested
+    # at the time a PR is ready.
+    fast = os.environ.get("SHM_CSR_FAST", "yes")
     cmd = [
         "bash",
         wrapper,
