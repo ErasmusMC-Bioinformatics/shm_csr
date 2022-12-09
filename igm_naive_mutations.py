@@ -5,13 +5,17 @@ Find naive mutations (< 2% mutated) for IGM genes
 """
 
 import argparse
+import contextlib
 
 
 def find_naive_mutations(mutation_file, naive_file, naive_memory_file,
                          percentage_cutoff=0.02):
-    with (open(mutation_file, "rt") as mutations,
-          open(naive_file, "wt") as naive,
-          open(naive_memory_file, "wt") as naive_memory,):
+    # A compound with statement throws a syntax error with the included python
+    # 3.7.1 in the container, so use an exit stack instead.
+    with contextlib.ExitStack() as stack:
+        mutations = stack.enter_context(open(mutation_file, "rt"))
+        naive = stack.enter_context(open(naive_file, "wt"))
+        naive_memory = stack.enter_context(open(naive_memory_file, "wt"))
         header = next(mutations)
         naive.write(header)
         naive_memory.write(header)
