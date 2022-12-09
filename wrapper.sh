@@ -24,7 +24,10 @@ fast=${19}
 
 #exec 5> debug_output.txt
 #BASH_XTRACEFD="5"
-#PS4='$(date +%s.%N) $LINENO: '
+## Busybox date does not support '+%s.%N'. So use the slower python instead.
+## Using -S python does not do 'import site' which shortens the command
+## to 10 milliseconds.
+#PS4='$(python -Sc "import time; print(time.time())") $LINENO: '
 #set -x
 
 mkdir -p $outdir
@@ -89,101 +92,10 @@ if [[ "${naive_output}" == "yes" ]] || [[ "$fast" == "no" ]] ; then
 	echo "---------------- creating new IMGT zips ----------------"
 	echo "---------------- creating new IMGT zips ----------------<br />" >> $log
 
-	mkdir $outdir/new_IMGT
+	python $dir/split_imgt_file.py --outdir $outdir $input $outdir/merged.txt \
+	  --prefix new_IMGT \
+	  - IGA IGA1 IGA2 IGG IGG1 IGG2 IGG3 IGG4 IGM IGE
 
-	cp $PWD/summary.txt "$outdir/new_IMGT/1_Summary.txt"
-	cp $PWD/gapped_nt.txt "$outdir/new_IMGT/2_IMGT-gapped-nt-sequences.txt"
-	cp $PWD/sequences.txt "$outdir/new_IMGT/3_Nt-sequences.txt"
-	cp $PWD/gapped_aa.txt "$outdir/new_IMGT/4_IMGT-gapped-AA-sequences.txt"
-	cp $PWD/aa.txt "$outdir/new_IMGT/5_AA-sequences.txt"
-	cp $PWD/junction.txt "$outdir/new_IMGT/6_Junction.txt"
-	cp $PWD/mutationanalysis.txt "$outdir/new_IMGT/7_V-REGION-mutation-and-AA-change-table.txt"
-	cp $PWD/mutationstats.txt "$outdir/new_IMGT/8_V-REGION-nt-mutation-statistics.txt"
-	cp $PWD/aa_change_stats.txt "$outdir/new_IMGT/9_V-REGION-AA-change-statistics.txt"
-	cp $PWD/hotspots.txt "$outdir/new_IMGT/10_V-REGION-mutation-hotspots.txt"
-
-	mkdir $outdir/new_IMGT_IGA
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA
-
-	mkdir $outdir/new_IMGT_IGA1
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA1
-
-	mkdir $outdir/new_IMGT_IGA2
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA2
-
-	mkdir $outdir/new_IMGT_IGG
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG
-
-	mkdir $outdir/new_IMGT_IGG1
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG1
-
-	mkdir $outdir/new_IMGT_IGG2
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG2
-
-	mkdir $outdir/new_IMGT_IGG3
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG3
-
-	mkdir $outdir/new_IMGT_IGG4
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG4
-
-	mkdir $outdir/new_IMGT_IGM
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGM
-
-	mkdir $outdir/new_IMGT_IGE
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_IGE
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT/ $outdir/merged.txt "-" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGA/ $outdir/merged.txt "IGA" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGA1/ $outdir/merged.txt "IGA1" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGA2/ $outdir/merged.txt "IGA2" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG/ $outdir/merged.txt "IGG" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG1/ $outdir/merged.txt "IGG1" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG2/ $outdir/merged.txt "IGG2" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG3/ $outdir/merged.txt "IGG3" 2>&1
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG4/ $outdir/merged.txt "IGG4" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGM/ $outdir/merged.txt "IGM" 2>&1
-
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_IGE/ $outdir/merged.txt "IGE" 2>&1
-
-
-	tmp="$PWD"
-	cd $outdir/new_IMGT/ #tar weirdness...
-	tar -cJf ../new_IMGT.txz *
-
-	cd $outdir/new_IMGT_IGA/
-	tar -cJf ../new_IMGT_IGA.txz *
-
-	cd $outdir/new_IMGT_IGA1/
-	tar -cJf ../new_IMGT_IGA1.txz *
-
-	cd $outdir/new_IMGT_IGA2/
-	tar -cJf ../new_IMGT_IGA2.txz *
-
-	cd $outdir/new_IMGT_IGG/
-	tar -cJf ../new_IMGT_IGG.txz *
-
-	cd $outdir/new_IMGT_IGG1/
-	tar -cJf ../new_IMGT_IGG1.txz *
-
-	cd $outdir/new_IMGT_IGG2/
-	tar -cJf ../new_IMGT_IGG2.txz *
-
-	cd $outdir/new_IMGT_IGG3/
-	tar -cJf ../new_IMGT_IGG3.txz *
-
-	cd $outdir/new_IMGT_IGG4/
-	tar -cJf ../new_IMGT_IGG4.txz *
-
-	cd $outdir/new_IMGT_IGM/
-	tar -cJf ../new_IMGT_IGM.txz *
-
-	cd $outdir/new_IMGT_IGE/
-	tar -cJf ../new_IMGT_IGE.txz *
-
-	cd $tmp
 fi
 
 echo "---------------- shm_csr.r ----------------"
@@ -228,7 +140,9 @@ echo "---------------- sequence_overview.r ----------------<br />" >> $log
 
 mkdir $outdir/sequence_overview
 
-Rscript $dir/sequence_overview.r $outdir/before_unique_filter.txt $outdir/merged.txt $outdir/sequence_overview $classes $outdir/hotspot_analysis_sum.txt ${empty_region_filter} 2>&1
+python $dir/sequence_overview.py --before-unique $outdir/before_unique_filter.txt \
+  --outdir $outdir/sequence_overview --empty-region-filter ${empty_region_filter}
+Rscript $dir/nt_overview.r $outdir/merged.txt $outdir/sequence_overview $classes $outdir/hotspot_analysis_sum.txt ${empty_region_filter} 2>&1
 
 echo "<table border='1'>" > $outdir/base_overview.html
 
@@ -442,7 +356,12 @@ then
 	echo "<a href='aa_histogram_IGE.pdf'><img src='aa_histogram_IGE.png'/></a><br />" >> $output
 fi
 
-
+count_imgt_lines () {
+  tar -xJf $1 1_Summary.txt
+  # Use a pipe so wc -l does not display the filename
+  wc -l < 1_Summary.txt
+  rm 1_Summary.txt
+}
 
 if [[ "$fast" == "no" ]] ; then
 
@@ -467,7 +386,7 @@ if [[ "$fast" == "no" ]] ; then
 	echo "<p>${header_substring}</p></center>" >> $output
 
 	mkdir $outdir/baseline/IGA_IGG_IGM
-	if [[ $(wc -l < $outdir/new_IMGT/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGA_IGG_IGM
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT.txz "IGA_IGG_IGM_IGE" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline.pdf" "Sequence.ID" "$outdir/baseline.txt"
 	else
@@ -475,7 +394,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGA
-	if [[ $(wc -l < $outdir/new_IMGT_IGA/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGA.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGA
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGA.txz "IGA" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGA.pdf" "Sequence.ID" "$outdir/baseline_IGA.txt"
 	else
@@ -483,7 +402,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGG
-	if [[ $(wc -l < $outdir/new_IMGT_IGG/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGG.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGG
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGG.txz "IGG" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGG.pdf" "Sequence.ID" "$outdir/baseline_IGG.txt"
 	else
@@ -491,7 +410,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGM
-	if [[ $(wc -l < $outdir/new_IMGT_IGM/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGM.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGM
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGM.txz "IGM" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGM.pdf" "Sequence.ID" "$outdir/baseline_IGM.txt"
 	else
@@ -499,7 +418,7 @@ if [[ "$fast" == "no" ]] ; then
 	fi
 
 	mkdir $outdir/baseline/IGE
-	if [[ $(wc -l < $outdir/new_IMGT_IGE/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGE.txz)" -gt "1" ]]; then
 		cd $outdir/baseline/IGE
 		bash $dir/baseline/wrapper.sh 1 1 1 1 0 0 "${baseline_boundaries}" $outdir/new_IMGT_IGE.txz "IGE" "$dir/baseline/IMGTVHreferencedataset20161215.fa" "$outdir/baseline_IGE.pdf" "Sequence.ID" "$outdir/baseline_IGE.txt"
 	else
@@ -572,116 +491,70 @@ if [[ "$fast" == "no" ]] ; then
 	bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones.txt $outdir/change_o/change-o-defined_clones-summary.txt
 	Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/change_o/change-o-db-defined_first_clones.txt 2>&1
 	
-	mkdir $outdir/new_IMGT_changeo
-	cp $outdir/new_IMGT/* $outdir/new_IMGT_changeo
-	
-	Rscript $dir/new_imgt.r $outdir/new_IMGT_changeo $outdir/change_o/change-o-db-defined_first_clones.txt "-" 2>&1
-	
-	cd $outdir/new_IMGT_changeo
-	tar -cJf ../new_IMGT_first_seq_of_clone.txz *
-	cd $outdir/change_o
-	
-	rm -rf $outdir/new_IMGT_changeo
-	
+	python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_first_seq_of_clone \
+	  $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones.txt \
+    "-"
+
 	Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/merged.txt "all" "Sequence.ID,best_match" "SEQUENCE_ID" "Sequence.ID" $outdir/change_o/change-o-db-defined_clones.txt 2>&1
 	echo "Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/$outdir/merged.txt 'all' 'Sequence.ID,best_match' 'Sequence.ID' 'Sequence.ID' '\t' $outdir/change_o/change-o-db-defined_clones.txt 2>&1"
 	
-	if [[ $(wc -l < $outdir/new_IMGT_IGA/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGA.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGA.txz false false false $outdir/change_o/change-o-db-IGA.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGA.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-defined_clones-summary-IGA.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-db-defined_first_clones-IGA.txt 2>&1
 		
-		mkdir $outdir/new_IMGT_IGA_changeo
-		cp $outdir/new_IMGT/* $outdir/new_IMGT_IGA_changeo
-		
-		Rscript $dir/new_imgt.r $outdir/new_IMGT_IGA_changeo $outdir/change_o/change-o-db-defined_first_clones-IGA.txt "-" 2>&1
-		
-		cd $outdir/new_IMGT_IGA_changeo
-		tar -cJf ../new_IMGT_IGA_first_seq_of_clone.txz *
-		
-		rm -rf $outdir/new_IMGT_IGA_changeo
-		
-		cd $outdir/change_o
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGA_first_seq_of_clone \
+      $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGA.txt \
+      "-"
+
 	else
 		echo "No IGA sequences" > "$outdir/change_o/change-o-db-defined_clones-IGA.txt"
 		echo "No IGA sequences" > "$outdir/change_o/change-o-defined_clones-summary-IGA.txt"
 	fi
 	
-	if [[ $(wc -l < $outdir/new_IMGT_IGG/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGG.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGG.txz false false false $outdir/change_o/change-o-db-IGG.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGG.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-defined_clones-summary-IGG.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-db-defined_first_clones-IGG.txt 2>&1
 		
-		mkdir $outdir/new_IMGT_IGG_changeo
-		cp $outdir/new_IMGT/* $outdir/new_IMGT_IGG_changeo
-		
-		Rscript $dir/new_imgt.r $outdir/new_IMGT_IGG_changeo $outdir/change_o/change-o-db-defined_first_clones-IGG.txt "-" 2>&1
-		
-		cd $outdir/new_IMGT_IGG_changeo
-		tar -cJf ../new_IMGT_IGG_first_seq_of_clone.txz *
-		rm -rf $outdir/new_IMGT_IGG_changeo
-		
-		cd $outdir/change_o
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGG_first_seq_of_clone \
+       $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGG.txt \
+      "-"
+
 	else
 		echo "No IGG sequences" > "$outdir/change_o/change-o-db-defined_clones-IGG.txt"
 		echo "No IGG sequences" > "$outdir/change_o/change-o-defined_clones-summary-IGG.txt"
 	fi
 
-	if [[ $(wc -l < $outdir/new_IMGT_IGM/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGM.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGM.txz false false false $outdir/change_o/change-o-db-IGM.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGM.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-defined_clones-summary-IGM.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-db-defined_first_clones-IGM.txt 2>&1
 		
-		mkdir $outdir/new_IMGT_IGM_changeo
-		cp $outdir/new_IMGT/* $outdir/new_IMGT_IGM_changeo
-		
-		Rscript $dir/new_imgt.r $outdir/new_IMGT_IGM_changeo $outdir/change_o/change-o-db-defined_first_clones-IGM.txt "-" 2>&1
-		
-		cd $outdir/new_IMGT_IGM_changeo
-		tar -cJf ../new_IMGT_IGM_first_seq_of_clone.txz *
-		
-		rm -rf $outdir/new_IMGT_IGM_changeo
-		
-		cd $outdir/change_o
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGM_first_seq_of_clone \
+      $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGM.txt \
+      "-"
+
 	else
 		echo "No IGM sequences" > "$outdir/change_o/change-o-db-defined_clones-IGM.txt"
 		echo "No IGM sequences" > "$outdir/change_o/change-o-defined_clones-summary-IGM.txt"
 	fi
 
-	if [[ $(wc -l < $outdir/new_IMGT_IGE/1_Summary.txt) -gt "1" ]]; then
+	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGE.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGE.txz false false false $outdir/change_o/change-o-db-IGE.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGE.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-defined_clones-summary-IGE.txt
 		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-db-defined_first_clones-IGE.txt 2>&1
 		
-		mkdir $outdir/new_IMGT_IGE_changeo
-		cp $outdir/new_IMGT/* $outdir/new_IMGT_IGE_changeo
-		
-		Rscript $dir/new_imgt.r $outdir/new_IMGT_IGE_changeo $outdir/change_o/change-o-db-defined_first_clones-IGE.txt "-" 2>&1
-		
-		cd $outdir/new_IMGT_IGE_changeo
-		tar -cJf ../new_IMGT_IGE_first_seq_of_clone.txz *
-		
-		rm -rf $outdir/new_IMGT_IGE_changeo
-		
-		cd $outdir/change_o
+    python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGE_first_seq_of_clone \
+      $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGE.txt \
+      "-"
+
 	else
 		echo "No IGE sequences" > "$outdir/change_o/change-o-db-defined_clones-IGE.txt"
 		echo "No IGE sequences" > "$outdir/change_o/change-o-defined_clones-summary-IGE.txt"
 	fi
 
 	cd "$tmp"
-	
-	rm -rf $outdir/new_IMGT
-	rm -rf $outdir/new_IMGT_IGA/
-	rm -rf $outdir/new_IMGT_IGA1/
-	rm -rf $outdir/new_IMGT_IGA2/
-	rm -rf $outdir/new_IMGT_IGG/
-	rm -rf $outdir/new_IMGT_IGG1/
-	rm -rf $outdir/new_IMGT_IGG2/
-	rm -rf $outdir/new_IMGT_IGG3/
-	rm -rf $outdir/new_IMGT_IGG4/
-	rm -rf $outdir/new_IMGT_IGM/
-	rm -rf $outdir/new_IMGT_IGE/
 
 	echo "<div class='tabbertab' title='Clonal Relation' style='width: 7000px;'>" >> $output #clonality tab
 
