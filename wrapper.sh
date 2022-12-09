@@ -744,7 +744,8 @@ echo "<tr><td>An IMGT archive with just the matched and filtered IGG3 sequences<
 echo "<tr><td>An IMGT archive with just the matched and filtered IGG4 sequences</td><td><a href='new_IMGT_IGG4.txz' download='new_IMGT_IGG4.txz' >Download</a></td></tr>" >> $output
 echo "<tr><td>An IMGT archive with just the matched and filtered IGM sequences</td><td><a href='new_IMGT_IGM.txz' download='new_IMGT_IGM.txz' >Download</a></td></tr>" >> $output
 echo "<tr><td>An IMGT archive with just the matched and filtered IGE sequences</td><td><a href='new_IMGT_IGE.txz' download='new_IMGT_IGE.txz' >Download</a></td></tr>" >> $output
-
+echo "<tr><td>An IMGT archive with just the matched and filtered naive IGM sequences (mutations below 2%)</td><td><a href='new_IMGT_IGM_NAIVE.txz' download='new_IMGT_IGM_NAIVE.txz' >Download</a></td></tr>" >> $output
+echo "<tr><td>An IMGT archive with just the matched and filtered naive memory IGM sequences (mutations 2% or higher)</td><td><a href='new_IMGT_IGM_NAIVE_MEMORY.txz' download='new_IMGT_IGM_NAIVE_MEMORY.txz' >Download</a></td></tr>" >> $output
 echo "</table>" >> $output
 
 echo "<br />" >> $output
