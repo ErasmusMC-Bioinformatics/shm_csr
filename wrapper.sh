@@ -108,13 +108,13 @@ echo "---------- Split naive memory IGM ---------<br />" >> $log
 python $dir/igm_naive_mutations.py $outdir/scatter.txt $outdir/igm_naive_mutations.txt \
   $outdir/igm_naive_memory_mutations.txt
 
-python $dir/split_imgt_file.py --outdir $outdir $outdir/NEW_IMGT_IGM.txz \
+python $dir/split_imgt_file.py --outdir $outdir $outdir/new_IMGT_IGM.txz \
   $outdir/igm_naive_mutations.txt \
-  --prefix new_IMGT_IGM_NAIVE.txt -
+  --prefix new_IMGT_IGM_NAIVE -
 
-python $dir/split_imgt_file.py --outdir $outdir $outdir/NEW_IMGT_IGM.txz \
+python $dir/split_imgt_file.py --outdir $outdir $outdir/new_IMGT_IGM.txz \
   $outdir/igm_naive_memory_mutations.txt \
-  --prefix new_IMGT_IGM_NAIVE_MEMORY.txt -
+  --prefix new_IMGT_IGM_NAIVE_MEMORY -
 
 echo "---------------- plot_pdfs.r ----------------"
 echo "---------------- plot_pdfs.r ----------------<br />" >> $log
