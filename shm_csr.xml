@@ -1,4 +1,4 @@
-<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.5.0">
+<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.6.0">
 	<description></description>
 	<requirements>
 		<requirement type="package" version="3.7.1">python</requirement>
@@ -89,7 +89,7 @@
 			<when value="yes"></when>
 			<when value="no"></when>
 		</conditional>
-		<param name="fast" type="select" label="Fast" help="Skips generating the new ZIP files and Change-O/Baseline" >
+		<param name="fast" type="select" label="Fast" help="Skips Change-O/Baseline" >
 			<option value="yes">Yes</option>
 			<option value="no" selected="true">No</option>
 		</param>
