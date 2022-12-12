@@ -153,6 +153,9 @@ def match_sequence(seq, compiledregex):
         ca1hits = currentIDHits["ca1"]
         ca2hits = currentIDHits["ca2"]
         if ca1hits >= ca2hits:
+            # TODO: All variants with 0 matched are matched to IGA1 with 0 hits
+            # TODO: these are later turned into unmatched by the merge_and_filter.R
+            # TODO: script
             return "IGA1", ca1hits, cahits, start_location["ca"]
         else:
             return "IGA2", ca2hits, cahits, start_location["ca"]
