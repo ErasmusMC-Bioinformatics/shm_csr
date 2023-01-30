@@ -24,10 +24,9 @@ fast=${19}
 
 #exec 5> debug_output.txt
 #BASH_XTRACEFD="5"
-## Busybox date does not support '+%s.%N'. So use the slower python instead.
-## Using -S python does not do 'import site' which shortens the command
-## to 10 milliseconds.
-#PS4='$(python -Sc "import time; print(time.time())") $LINENO: '
+## Busybox date does not support '+%s.%N'. So use a custom program. Can be
+## Compiled with cc -Os show_time_as_float.c -o show_time_as_float
+#PS4='$(${dir}/show_time_as_float) $LINENO: '
 #set -x
 
 mkdir -p $outdir
