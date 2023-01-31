@@ -488,9 +488,10 @@ frequency_bins_data_by_class = frequency_bins_data_by_class[order(frequency_bins
 
 
 frequency_bins_data_by_class$frequency_bins = gsub("-", " to ", frequency_bins_data_by_class$frequency_bins)
-frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
-frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
-
+if (nrow(frequency_bins_data_by_class) > 0) {
+    frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
+    frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
+}
 write.table(frequency_bins_data_by_class, "frequency_ranges_classes.txt", sep="\t",quote=F,row.names=F,col.names=T)
 
 frequency_bins_data = data.frame(data.table(dat)[, list(frequency_count=.N), by=c("best_match", "best_match_class", "frequency_bins")])
@@ -503,8 +504,10 @@ frequency_bins_data$frequency = round(frequency_bins_data$frequency_count / freq
 
 frequency_bins_data = frequency_bins_data[order(frequency_bins_data$best_match, frequency_bins_data$frequency_bins),]
 frequency_bins_data$frequency_bins = gsub("-", " to ", frequency_bins_data$frequency_bins)
-frequency_bins_data[frequency_bins_data$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
-frequency_bins_data[frequency_bins_data$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
+if (nrow(frequency_bins_data) > 0) {
+    frequency_bins_data[frequency_bins_data$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
+    frequency_bins_data[frequency_bins_data$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
+}
 write.table(frequency_bins_data, "frequency_ranges_subclasses.txt", sep="\t",quote=F,row.names=F,col.names=T)
 
 
