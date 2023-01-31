@@ -11,6 +11,6 @@ int main(void)
         fputs("timespec_get failed!", stderr);
         return 1;
     }
-    printf("%d.%d\n", ts.tv_sec, ts.tv_nsec);
+    printf("%ld.%ld\n", ts.tv_sec, ts.tv_nsec);
     return 0;
 }
