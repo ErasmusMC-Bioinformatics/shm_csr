@@ -439,19 +439,20 @@ dat.clss$best_match = substr(dat.clss$best_match, 0, 3)
 
 dat.clss = rbind(dat, dat.clss)
 
+write.table(dat[,c("Sequence.ID", "best_match", "VRegionMutations", "VRegionNucleotides", "percentage_mutations")], "scatter.txt", sep="\t",quote=F,row.names=F,col.names=T)
+
+if (nrow(dat) > 0) {
 p = ggplot(dat.clss, aes(best_match, percentage_mutations))
 p = p + geom_point(aes(colour=best_match), position="jitter") + geom_boxplot(aes(middle=mean(percentage_mutations)), alpha=0.1, outlier.shape = NA)
 p = p + xlab("Subclass") + ylab("Frequency") + ggtitle("Frequency scatter plot") + theme(panel.background = element_rect(fill = "white", colour="black"), text = element_text(size=16, colour="black"))
 p = p + scale_fill_manual(values=c("IGA" = "blue4", "IGA1" = "lightblue1", "IGA2" = "blue4", "IGG" = "olivedrab3", "IGG1" = "olivedrab3", "IGG2" = "red", "IGG3" = "gold", "IGG4" = "darkred", "IGM" = "darkviolet", "IGE" = "darkorange", "all" = "blue4"))
 p = p + scale_colour_manual(guide = guide_legend(title = "Subclass"), values=c("IGA" = "blue4", "IGA1" = "lightblue1", "IGA2" = "blue4", "IGG" = "olivedrab3", "IGG1" = "olivedrab3", "IGG2" = "red", "IGG3" = "gold", "IGG4" = "darkred", "IGM" = "darkviolet", "IGE" = "darkorange", "all" = "blue4"))
-
 png(filename="scatter.png")
 print(p)
 dev.off()
 
 pdfplots[["scatter.pdf"]] <- p
-
-write.table(dat[,c("Sequence.ID", "best_match", "VRegionMutations", "VRegionNucleotides", "percentage_mutations")], "scatter.txt", sep="\t",quote=F,row.names=F,col.names=T)
+}
 
 print("Plotting frequency ranges plot")
 
@@ -467,6 +468,7 @@ frequency_bins_data = merge(frequency_bins_data, frequency_bins_sum, by="best_ma
 
 frequency_bins_data$frequency = round(frequency_bins_data$frequency_count / frequency_bins_data$class_sum * 100, 2)
 
+if (nrow(frequency_bins_data) > 0) {
 p = ggplot(frequency_bins_data, aes(frequency_bins, frequency))
 p = p + geom_bar(aes(fill=best_match_class), stat="identity", position="dodge") + theme(panel.background = element_rect(fill = "white", colour="black"), text = element_text(size=16, colour="black"))
 p = p + xlab("Frequency ranges") + ylab("Frequency") + ggtitle("Mutation Frequencies by class") + scale_fill_manual(guide = guide_legend(title = "Class"), values=c("IGA" = "blue4", "IGG" = "olivedrab3", "IGM" = "darkviolet", "IGE" = "darkorange", "all" = "blue4"))
@@ -476,6 +478,7 @@ print(p)
 dev.off()
 
 pdfplots[["frequency_ranges.pdf"]] <- p
+}
 
 save(pdfplots, file="pdfplots.RData")
 
@@ -483,10 +486,12 @@ frequency_bins_data_by_class = frequency_bins_data
 
 frequency_bins_data_by_class = frequency_bins_data_by_class[order(frequency_bins_data_by_class$best_match_class, frequency_bins_data_by_class$frequency_bins),]
 
-frequency_bins_data_by_class$frequency_bins = gsub("-", " to ", frequency_bins_data_by_class$frequency_bins)
-frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
-frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
 
+frequency_bins_data_by_class$frequency_bins = gsub("-", " to ", frequency_bins_data_by_class$frequency_bins)
+if (nrow(frequency_bins_data_by_class) > 0) {
+    frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
+    frequency_bins_data_by_class[frequency_bins_data_by_class$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
+}
 write.table(frequency_bins_data_by_class, "frequency_ranges_classes.txt", sep="\t",quote=F,row.names=F,col.names=T)
 
 frequency_bins_data = data.frame(data.table(dat)[, list(frequency_count=.N), by=c("best_match", "best_match_class", "frequency_bins")])
@@ -499,9 +504,10 @@ frequency_bins_data$frequency = round(frequency_bins_data$frequency_count / freq
 
 frequency_bins_data = frequency_bins_data[order(frequency_bins_data$best_match, frequency_bins_data$frequency_bins),]
 frequency_bins_data$frequency_bins = gsub("-", " to ", frequency_bins_data$frequency_bins)
-frequency_bins_data[frequency_bins_data$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
-frequency_bins_data[frequency_bins_data$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
-
+if (nrow(frequency_bins_data) > 0) {
+    frequency_bins_data[frequency_bins_data$frequency_bins == "20", c("frequency_bins")] = "20 or higher"
+    frequency_bins_data[frequency_bins_data$frequency_bins == "0", c("frequency_bins")] = "0 or lower"
+}
 write.table(frequency_bins_data, "frequency_ranges_subclasses.txt", sep="\t",quote=F,row.names=F,col.names=T)
 
 

@@ -22,9 +22,28 @@
 	</requirements>
 	<command interpreter="bash">
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
-			wrapper.sh $in_file custom $out_file $out_file.files_path "${in_file.name}" "-" $functionality $unique $naive_output_cond.naive_output $naive_output_ca $naive_output_cg $naive_output_cm $naive_output_ce $naive_output_all $filter_unique.filter_unique_select $filter_unique.filter_unique_clone_count $class_filter_cond.class_filter $empty_region_filter $fast
+			wrapper.sh $in_file
+			custom $out_file $out_file.files_path
+			"${in_file.name}" "-" $functionality $unique
+			$naive_output_cond.naive_output $naive_output_ca
+			$naive_output_cg $naive_output_cm $naive_output_ce
+			$naive_output_all $filter_unique.filter_unique_select
+			$filter_unique.filter_unique_clone_count
+			$class_filter_cond.class_filter
+			$empty_region_filter
+			$fast
 		#else:
-			wrapper.sh $in_file custom $out_file $out_file.files_path "${in_file.name}" "-" $functionality $unique $naive_output_cond.naive_output $naive_output_ca $naive_output_cg $naive_output_cm $naive_output_ce $naive_output_all $filter_unique.filter_unique_select 2 $class_filter_cond.class_filter $empty_region_filter $fast
+			wrapper.sh
+			$in_file custom
+			$out_file $out_file.files_path
+			"${in_file.name}" "-" $functionality $unique
+			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
+			$naive_output_cm $naive_output_ce $naive_output_all
+			$filter_unique.filter_unique_select
+			2
+			$class_filter_cond.class_filter
+			$empty_region_filter
+			$fast
 		#end if
 	</command>
 	<inputs>
