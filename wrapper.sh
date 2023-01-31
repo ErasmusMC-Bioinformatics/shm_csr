@@ -84,7 +84,24 @@ python $dir/gene_identification.py --input $PWD/summary.txt --output $outdir/ide
 echo "---------------- merge_and_filter.r ----------------"
 echo "---------------- merge_and_filter.r ----------------<br />" >> $log
 
-Rscript $dir/merge_and_filter.r $PWD/summary.txt $PWD/sequences.txt $PWD/mutationanalysis.txt $PWD/mutationstats.txt $PWD/hotspots.txt "$PWD/gapped_aa.txt" $outdir/identified_genes.txt $outdir/merged.txt $outdir/before_unique_filter.txt $outdir/unmatched.txt $method $functionality $unique ${filter_unique} ${filter_unique_count} ${class_filter} ${empty_region_filter} 2>&1
+Rscript $dir/merge_and_filter.r \
+  $PWD/summary.txt \
+  $PWD/sequences.txt \
+  $PWD/mutationanalysis.txt \
+  $PWD/mutationstats.txt \
+  $PWD/hotspots.txt \
+  "$PWD/gapped_aa.txt" \
+  $outdir/identified_genes.txt \
+  $outdir/merged.txt \
+  $outdir/before_unique_filter.txt \
+  $outdir/unmatched.txt \
+  $method \
+  $functionality \
+  $unique \
+  ${filter_unique} \
+  ${filter_unique_count} \
+  ${class_filter} \
+  ${empty_region_filter}
 
 echo "---------------- creating new IMGT zips ----------------"
 echo "---------------- creating new IMGT zips ----------------<br />" >> $log
@@ -99,7 +116,7 @@ echo "---------------- shm_csr.r ----------------<br />" >> $log
 
 classes="IGA,IGA1,IGA2,IGG,IGG1,IGG2,IGG3,IGG4,IGM,IGE,unmatched"
 echo "R mutation analysis"
-Rscript $dir/shm_csr.r $outdir/merged.txt $classes $outdir ${empty_region_filter} 2>&1
+Rscript $dir/shm_csr.r $outdir/merged.txt $classes $outdir ${empty_region_filter}
 
 echo "---------- Split naive memory IGM ---------"
 echo "---------- Split naive memory IGM ---------<br />" >> $log
@@ -118,9 +135,9 @@ python $dir/split_imgt_file.py --outdir $outdir $outdir/new_IMGT_IGM.txz \
 echo "---------------- plot_pdfs.r ----------------"
 echo "---------------- plot_pdfs.r ----------------<br />" >> $log
 
-echo "Rscript $dir/shm_csr.r $outdir/pdfplots.RData $outdir 2>&1"
+echo "Rscript $dir/shm_csr.r $outdir/pdfplots.RData $outdir"
 
-Rscript $dir/plot_pdf.r "$outdir/pdfplots.RData" "$outdir" 2>&1
+Rscript $dir/plot_pdf.r "$outdir/pdfplots.RData" "$outdir"
 
 echo "---------------- shm_csr.py ----------------"
 echo "---------------- shm_csr.py ----------------<br />" >> $log
@@ -130,7 +147,11 @@ python $dir/shm_csr.py --input $outdir/merged.txt --genes $classes --empty_regio
 echo "---------------- aa_histogram.r ----------------"
 echo "---------------- aa_histogram.r ----------------<br />" >> $log
 
-Rscript $dir/aa_histogram.r $outdir/aa_id_mutations.txt $outdir/absent_aa_id.txt "IGA,IGG,IGM,IGE" $outdir/ 2>&1
+Rscript $dir/aa_histogram.r \
+  $outdir/aa_id_mutations.txt \
+  $outdir/absent_aa_id.txt "IGA,IGG,IGM,IGE" \
+  $outdir/
+
 if [ -e "$outdir/aa_histogram_.png" ]; then
         mv $outdir/aa_histogram_.png $outdir/aa_histogram.png
         mv $outdir/aa_histogram_.pdf $outdir/aa_histogram.pdf
@@ -152,7 +173,12 @@ mkdir $outdir/sequence_overview
 
 python $dir/sequence_overview.py --before-unique $outdir/before_unique_filter.txt \
   --outdir $outdir/sequence_overview --empty-region-filter ${empty_region_filter}
-Rscript $dir/nt_overview.r $outdir/merged.txt $outdir/sequence_overview $classes $outdir/hotspot_analysis_sum.txt ${empty_region_filter} 2>&1
+Rscript $dir/nt_overview.r \
+  $outdir/merged.txt \
+  $outdir/sequence_overview \
+  $classes \
+  $outdir/hotspot_analysis_sum.txt \
+  ${empty_region_filter}
 
 echo "<table border='1'>" > $outdir/base_overview.html
 
@@ -197,7 +223,12 @@ do
 	echo "---------------- pattern_plots.r ----------------"
 	echo "---------------- pattern_plots.r ----------------<br />" >> $log
 
-	Rscript $dir/pattern_plots.r $outdir/data_${func}.txt $outdir/aid_motives $outdir/relative_mutations $outdir/absolute_mutations $outdir/shm_overview.txt 2>&1
+	Rscript $dir/pattern_plots.r \
+	  $outdir/data_${func}.txt \
+	  $outdir/aid_motives \
+	  $outdir/relative_mutations \
+	  $outdir/absolute_mutations \
+	  $outdir/shm_overview.txt
 	
 	echo "<table class='pure-table pure-table-striped'>" >> $output
 	echo "<thead><tr><th>info</th>" >> $output
@@ -499,19 +530,27 @@ if [[ "$fast" == "no" ]] ; then
 
 	bash $dir/change_o/makedb.sh $outdir/new_IMGT.txz false false false $outdir/change_o/change-o-db.txt
 	bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones.txt $outdir/change_o/change-o-defined_clones-summary.txt
-	Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/change_o/change-o-db-defined_first_clones.txt 2>&1
+	Rscript $dir/change_o/select_first_in_clone.r \
+	  $outdir/change_o/change-o-db-defined_clones.txt \
+	  $outdir/change_o/change-o-db-defined_first_clones.txt
 	
 	python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_first_seq_of_clone \
 	  $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones.txt \
     "-"
 
-	Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/merged.txt "all" "Sequence.ID,best_match" "SEQUENCE_ID" "Sequence.ID" $outdir/change_o/change-o-db-defined_clones.txt 2>&1
-	echo "Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/$outdir/merged.txt 'all' 'Sequence.ID,best_match' 'Sequence.ID' 'Sequence.ID' '\t' $outdir/change_o/change-o-db-defined_clones.txt 2>&1"
+	Rscript $dir/merge.r \
+	  $outdir/change_o/change-o-db-defined_clones.txt \
+	  $outdir/merged.txt \
+	  "all" "Sequence.ID,best_match" "SEQUENCE_ID" "Sequence.ID" \
+	  $outdir/change_o/change-o-db-defined_clones.txt
+	echo "Rscript $dir/merge.r $outdir/change_o/change-o-db-defined_clones.txt $outdir/$outdir/merged.txt 'all' 'Sequence.ID,best_match' 'Sequence.ID' 'Sequence.ID' '\t' $outdir/change_o/change-o-db-defined_clones.txt"
 	
 	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGA.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGA.txz false false false $outdir/change_o/change-o-db-IGA.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGA.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-defined_clones-summary-IGA.txt
-		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGA.txt $outdir/change_o/change-o-db-defined_first_clones-IGA.txt 2>&1
+		Rscript $dir/change_o/select_first_in_clone.r \
+		  $outdir/change_o/change-o-db-defined_clones-IGA.txt \
+		  $outdir/change_o/change-o-db-defined_first_clones-IGA.txt
 		
     python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGA_first_seq_of_clone \
       $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGA.txt \
@@ -525,7 +564,9 @@ if [[ "$fast" == "no" ]] ; then
 	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGG.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGG.txz false false false $outdir/change_o/change-o-db-IGG.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGG.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-defined_clones-summary-IGG.txt
-		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGG.txt $outdir/change_o/change-o-db-defined_first_clones-IGG.txt 2>&1
+		Rscript $dir/change_o/select_first_in_clone.r \
+		  $outdir/change_o/change-o-db-defined_clones-IGG.txt \
+		  $outdir/change_o/change-o-db-defined_first_clones-IGG.txt
 		
     python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGG_first_seq_of_clone \
        $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGG.txt \
@@ -539,7 +580,9 @@ if [[ "$fast" == "no" ]] ; then
 	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGM.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGM.txz false false false $outdir/change_o/change-o-db-IGM.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGM.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-defined_clones-summary-IGM.txt
-		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGM.txt $outdir/change_o/change-o-db-defined_first_clones-IGM.txt 2>&1
+		Rscript $dir/change_o/select_first_in_clone.r \
+		  $outdir/change_o/change-o-db-defined_clones-IGM.txt \
+		  $outdir/change_o/change-o-db-defined_first_clones-IGM.txt
 		
     python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGM_first_seq_of_clone \
       $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGM.txt \
@@ -553,7 +596,9 @@ if [[ "$fast" == "no" ]] ; then
 	if [[ "$(count_imgt_lines $outdir/new_IMGT_IGE.txz)" -gt "1" ]]; then
 		bash $dir/change_o/makedb.sh $outdir/new_IMGT_IGE.txz false false false $outdir/change_o/change-o-db-IGE.txt
 		bash $dir/change_o/define_clones.sh bygroup $outdir/change_o/change-o-db-IGE.txt gene first ham none min complete 3.0 $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-defined_clones-summary-IGE.txt
-		Rscript $dir/change_o/select_first_in_clone.r $outdir/change_o/change-o-db-defined_clones-IGE.txt $outdir/change_o/change-o-db-defined_first_clones-IGE.txt 2>&1
+		Rscript $dir/change_o/select_first_in_clone.r \
+		  $outdir/change_o/change-o-db-defined_clones-IGE.txt \
+		  $outdir/change_o/change-o-db-defined_first_clones-IGE.txt
 		
     python $dir/split_imgt_file.py --outdir $outdir --prefix new_IMGT_IGE_first_seq_of_clone \
       $outdir/new_IMGT.txz $outdir/change_o/change-o-db-defined_first_clones-IGE.txt \
