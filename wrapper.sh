@@ -22,6 +22,10 @@ class_filter=${17}
 empty_region_filter=${18}
 fast=${19}
 
+BASENAME=$(basename $input)
+# Cut off .txz or .tgz suffix
+PREFIX=${BASENAME%.*}
+
 #exec 5> debug_output.txt
 #BASH_XTRACEFD="5"
 ## Busybox date does not support '+%s.%N'. So use a custom program. Can be
@@ -107,7 +111,7 @@ echo "---------------- creating new IMGT zips ----------------"
 echo "---------------- creating new IMGT zips ----------------<br />" >> $log
 
 python $dir/split_imgt_file.py --outdir $outdir $input $outdir/merged.txt \
-  --prefix new_IMGT \
+  --prefix "new_IMGT_${PREFIX}" \
   - IGA IGA1 IGA2 IGG IGG1 IGG2 IGG3 IGG4 IGM IGE
 
 
@@ -126,11 +130,11 @@ python $dir/igm_naive_mutations.py $outdir/scatter.txt $outdir/igm_naive_mutatio
 
 python $dir/split_imgt_file.py --outdir $outdir $outdir/new_IMGT_IGM.txz \
   $outdir/igm_naive_mutations.txt \
-  --prefix new_IMGT_IGM_NAIVE -
+  --prefix "new_IMGT_IGM_NAIVE_${PREFIX}" -
 
 python $dir/split_imgt_file.py --outdir $outdir $outdir/new_IMGT_IGM.txz \
   $outdir/igm_naive_memory_mutations.txt \
-  --prefix new_IMGT_IGM_NAIVE_MEMORY -
+  --prefix "new_IMGT_IGM_NAIVE_MEMORY_${PREFIX}" -
 
 echo "---------------- plot_pdfs.r ----------------"
 echo "---------------- plot_pdfs.r ----------------<br />" >> $log
