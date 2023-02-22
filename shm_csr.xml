@@ -22,7 +22,7 @@
 	</requirements>
 	<command interpreter="bash">
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
-			wrapper.sh $in_file
+			$__tool_directory__/wrapper.sh $in_file
 			custom $out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca
@@ -33,7 +33,7 @@
 			$empty_region_filter
 			$fast
 		#else:
-			wrapper.sh
+			$__tool_directory__/wrapper.sh
 			$in_file custom
 			$out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
