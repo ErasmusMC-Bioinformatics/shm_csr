@@ -30,7 +30,9 @@ class SequenceStats:
             "IGG3": 0,
             "IGG4": 0,
             "IGM": 0,
-            "unmatched": 0}
+            "unmatched": 0,
+            "all": 0,
+        }
         self.table_rows: List[SequenceTableRow] = []
 
 
