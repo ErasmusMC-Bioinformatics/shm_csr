@@ -94,14 +94,9 @@
 				<option value="70_0">>70% class</option>
 				<option value="60_0">>60% class</option>
 				<option value="19_0">>19% class</option>
-				<option value="101_101">Do not assign (sub)class</option>
+				<option value="101_101_all">Do not assign (sub)class</option>
+				<option value="101_101_IGM">Everything is IGM</option>
 			</param>
-			<when value="70_70"></when>
-			<when value="60_55"></when>
-			<when value="70_0"></when>
-			<when value="60_0"></when>
-			<when value="19_0"></when>
-			<when value="101_101"></when>
 		</conditional>
 		<conditional name="naive_output_cond">
 			<param name="naive_output" type="select" label="Output new IMGT archives per class into your history?">

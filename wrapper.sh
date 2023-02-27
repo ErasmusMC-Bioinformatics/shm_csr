@@ -233,7 +233,7 @@ do
 	echo "<table class='pure-table pure-table-striped'>" >> $output
 	echo "<thead><tr><th>info</th>" >> $output
 	
-	if [ "${class_filter}" != "101_101" ] ; then
+	if [ "${class_filter}" != "101_101_all" ] ; then
 	
 		for gene in ${genes[@]}
 		do
@@ -808,7 +808,7 @@ echo "---------------- naive_output.r ----------------<br />" >> $log
 if [[ "$naive_output" == "yes" ]]
 then
 	echo "output naive output"
-	if [[ "${class_filter}" == "101_101" ]]
+	if [[ "${class_filter}" == "101_101_all" ]]
 	then
 		echo "copy new_IMGT.txz to ${naive_output_all}"
 		cp $outdir/new_IMGT.txz ${naive_output_all}
