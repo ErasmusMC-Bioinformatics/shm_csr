@@ -1,4 +1,4 @@
-version 1.7.0-dev
+version 1.7.0
 -----------------
 + Use the name of the input file to generate the name of the output IMGT 
   archives.
