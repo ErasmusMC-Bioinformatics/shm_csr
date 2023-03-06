@@ -1,5 +1,7 @@
 version 1.7.0-dev
 -----------------
++ Use the name of the input file to generate the name of the output IMGT 
+  archives.
 + Add same duplicate filters as immune repertoire pipeline.
 + Add a new "Everything is IGM" class filter for captured IGM sequences.
 + Fix bug where empty tables would cause crashes when generating plots.
