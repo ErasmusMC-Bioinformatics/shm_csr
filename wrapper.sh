@@ -42,7 +42,7 @@ echo "---------------- read parameters ----------------<br />" > $log
 
 echo "unpacking IMGT file"
 
-type="`file $input`"
+type="`file -L $input`"
 if [[ "$type" == *"Zip archive"* ]] ; then
 	echo "Zip archive"
 	echo "unzip $input -d $PWD/files/"
