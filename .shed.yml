@@ -1,0 +1,5 @@
+description: Somatic hypermutation and class switch recombination pipeline 
+name: shm_csr
+owner: davidvanzessen
+homepage_url: https://github.com/lumc/shm_csr
+
