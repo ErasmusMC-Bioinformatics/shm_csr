@@ -21,8 +21,11 @@
 		<requirement type="package" version="0.83">font-ttf-ubuntu</requirement>
 	</requirements>
 	<command interpreter="bash">
+		<![CDATA[
+		#set $input=$in_file.name
+		ln -s "$in_file" "$input" &&
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
-			$__tool_directory__/wrapper.sh $in_file
+			$__tool_directory__/wrapper.sh "$input"
 			custom $out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca
@@ -34,7 +37,7 @@
 			$fast
 		#else:
 			$__tool_directory__/wrapper.sh
-			$in_file custom
+			"$input" custom
 			$out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
@@ -45,6 +48,7 @@
 			$empty_region_filter
 			$fast
 		#end if
+	]]>
 	</command>
 	<inputs>
 		<param name="in_file" type="data" format="data" label="IMGT zip file to be analysed" />
