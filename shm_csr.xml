@@ -100,6 +100,8 @@
 				<option value="19_0">>19% class</option>
 				<option value="101_101_all">Do not assign (sub)class</option>
 				<option value="101_101_IGM">Everything is IGM</option>
+				<option value="101_101_IGA">Everything is IGA</option>
+				<option value="101_101_IGG">Everything is IGG</option>
 			</param>
 		</conditional>
 		<conditional name="naive_output_cond">
