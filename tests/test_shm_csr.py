@@ -74,6 +74,8 @@ def shm_csr_result():
     naive_output_cm = "None"
     naive_output_ce = "None"
     naive_output_all = "None"
+    naive_output_igm_naive = "None"
+    naive_output_igm_naive_memory = "None"
     filter_unique = "remove"
     filter_unique_count = '2'
     class_filter = '70_70'
@@ -100,6 +102,8 @@ def shm_csr_result():
         naive_output_cm,
         naive_output_ce,
         naive_output_all,
+        naive_output_igm_naive,
+        naive_output_igm_naive_memory,
         filter_unique,
         filter_unique_count,
         class_filter,

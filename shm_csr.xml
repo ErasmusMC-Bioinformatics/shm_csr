@@ -28,9 +28,10 @@
 			$__tool_directory__/wrapper.sh "$input"
 			custom $out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
-			$naive_output_cond.naive_output $naive_output_ca
-			$naive_output_cg $naive_output_cm $naive_output_ce
-			$naive_output_all $filter_unique.filter_unique_select
+			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
+			$naive_output_cm $naive_output_ce $naive_output_all $naive_output_igm_naive
+			$naive_output_igm_naive_memory
+			$filter_unique.filter_unique_select
 			$filter_unique.filter_unique_clone_count
 			$class_filter_cond.class_filter
 			$empty_region_filter
@@ -41,7 +42,8 @@
 			$out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
-			$naive_output_cm $naive_output_ce $naive_output_all
+			$naive_output_cm $naive_output_ce $naive_output_all $naive_output_igm_naive
+			$naive_output_igm_naive_memory
 			$filter_unique.filter_unique_select
 			2
 			$class_filter_cond.class_filter
@@ -100,6 +102,8 @@
 				<option value="19_0">>19% class</option>
 				<option value="101_101_all">Do not assign (sub)class</option>
 				<option value="101_101_IGM">Everything is IGM</option>
+				<option value="101_101_IGA">Everything is IGA</option>
+				<option value="101_101_IGG">Everything is IGG</option>
 			</param>
 		</conditional>
 		<conditional name="naive_output_cond">
@@ -120,18 +124,39 @@
 		<data format="imgt_archive" name="naive_output_ca" label = "Filtered IMGT IGA: ${in_file.name}" >
 		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_cg" label = "Filtered IMGT IGG: ${in_file.name}" >
 		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_cm" label = "Filtered IMGT IGM: ${in_file.name}" >
 		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_ce" label = "Filtered IMGT IGE: ${in_file.name}" >
 		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
+		</data>
+		<data format="imgt archive" name="naive_output_igm_naive" label = "Filtered naive IGM sequences (mutations below 2%): ${in_file.name}">
+			<filter>naive_output_cond['naive_output'] == "yes"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
+		</data>
+		<data format="imgt archive" name="naive_output_igm_naive_memory" label = "Filtered naive memory IGM sequences (mutations over 2%): ${in_file.name}">
+			<filter>naive_output_cond['naive_output'] == "yes"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
+			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_all" label = "Filtered IMGT all: ${in_file.name}" >
 		    <filter>naive_output_cond['naive_output'] == "yes"</filter>

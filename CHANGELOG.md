@@ -1,3 +1,8 @@
+version 1.8.0
+-----------------
++ Add options "Everything is IGA" and "Everything is IGG". 
++ Make sure IGM naive and naive memory are part of the galaxy output.
+
 version 1.7.0
 -----------------
 + Use the name of the input file to generate the name of the output IMGT 

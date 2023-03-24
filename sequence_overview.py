@@ -25,6 +25,8 @@ class SequenceStats:
             "IGA1": 0,
             "IGA2": 0,
             "IGE": 0,
+            "IGA": 0,  # IGA and IGG without subclasses only exist when the
+            "IGG": 0,  # everything is IGA or IGG option is chosen.
             "IGG1": 0,
             "IGG2": 0,
             "IGG3": 0,
