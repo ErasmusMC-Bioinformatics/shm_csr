@@ -1,3 +1,13 @@
+version 1.7.0
+-----------------
++ Use the name of the input file to generate the name of the output IMGT 
+  archives.
++ Add same duplicate filters as immune repertoire pipeline.
++ Add a new "Everything is IGM" class filter for captured IGM sequences.
++ Fix bug where empty tables would cause crashes when generating plots.
++ Fix bug where R script errors where not written to stderr, causing galaxy to 
+  mistake the jobs as being successful. 
+
 version 1.6.0
 -------------
 + Faster runtime due to faster gene identification, sequence overview creation 

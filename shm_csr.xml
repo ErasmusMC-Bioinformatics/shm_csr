@@ -1,4 +1,4 @@
-<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.6.0">
+<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.7.0" profile="16.04">
 	<description></description>
 	<requirements>
 		<requirement type="package" version="3.7.1">python</requirement>
@@ -21,11 +21,34 @@
 		<requirement type="package" version="0.83">font-ttf-ubuntu</requirement>
 	</requirements>
 	<command interpreter="bash">
+		<![CDATA[
+		#set $input=$in_file.name
+		ln -s "$in_file" "$input" &&
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
-			wrapper.sh $in_file custom $out_file $out_file.files_path "${in_file.name}" "-" $functionality $unique $naive_output_cond.naive_output $naive_output_ca $naive_output_cg $naive_output_cm $naive_output_ce $naive_output_all $filter_unique.filter_unique_select $filter_unique.filter_unique_clone_count $class_filter_cond.class_filter $empty_region_filter $fast
+			$__tool_directory__/wrapper.sh "$input"
+			custom $out_file $out_file.files_path
+			"${in_file.name}" "-" $functionality $unique
+			$naive_output_cond.naive_output $naive_output_ca
+			$naive_output_cg $naive_output_cm $naive_output_ce
+			$naive_output_all $filter_unique.filter_unique_select
+			$filter_unique.filter_unique_clone_count
+			$class_filter_cond.class_filter
+			$empty_region_filter
+			$fast
 		#else:
-			wrapper.sh $in_file custom $out_file $out_file.files_path "${in_file.name}" "-" $functionality $unique $naive_output_cond.naive_output $naive_output_ca $naive_output_cg $naive_output_cm $naive_output_ce $naive_output_all $filter_unique.filter_unique_select 2 $class_filter_cond.class_filter $empty_region_filter $fast
+			$__tool_directory__/wrapper.sh
+			"$input" custom
+			$out_file $out_file.files_path
+			"${in_file.name}" "-" $functionality $unique
+			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
+			$naive_output_cm $naive_output_ce $naive_output_all
+			$filter_unique.filter_unique_select
+			2
+			$class_filter_cond.class_filter
+			$empty_region_filter
+			$fast
 		#end if
+	]]>
 	</command>
 	<inputs>
 		<param name="in_file" type="data" format="data" label="IMGT zip file to be analysed" />
@@ -56,13 +79,16 @@
 		<param name="unique" type="select" label="Remove duplicates based on" help="" >
 			<option value="VGene,CDR3.IMGT.AA,best_match_class">Top.V.Gene, CDR3 (AA), C region</option>
 			<option value="VGene,CDR3.IMGT.AA">Top.V.Gene, CDR3 (AA)</option>
+			<option value="VGene,JGene,CDR3.IMGT.AA">Top.V.Gene, Top.J.Gene, CDR3 (AA)</option>
 			<option value="CDR3.IMGT.AA,best_match_class">CDR3 (AA), C region</option>
 			<option value="CDR3.IMGT.AA">CDR3 (AA)</option>
-			
+
 			<option value="VGene,CDR3.IMGT.seq,best_match_class">Top.V.Gene, CDR3 (nt), C region</option>
 			<option value="VGene,CDR3.IMGT.seq">Top.V.Gene, CDR3 (nt)</option>
+			<option value="VGene,JGene,CDR3.IMGT.seq">Top.V.Gene, Top.J.Gene, CDR3 (nt)</option>
 			<option value="CDR3.IMGT.seq,best_match_class">CDR3 (nt), C region</option>
 			<option value="CDR3.IMGT.seq">CDR3 (nt)</option>
+			<option value="VGene,DGene,JGene,CDR3.IMGT.seq">Top.V.Gene, Top.D.Gene, Top.J.Gene, CDR3 (nt)</option>
 			<option value="Sequence.ID" selected="true">Don't remove duplicates</option>
 		</param>
 		<conditional name="class_filter_cond">
@@ -72,14 +98,9 @@
 				<option value="70_0">>70% class</option>
 				<option value="60_0">>60% class</option>
 				<option value="19_0">>19% class</option>
-				<option value="101_101">Do not assign (sub)class</option>
+				<option value="101_101_all">Do not assign (sub)class</option>
+				<option value="101_101_IGM">Everything is IGM</option>
 			</param>
-			<when value="70_70"></when>
-			<when value="60_55"></when>
-			<when value="70_0"></when>
-			<when value="60_0"></when>
-			<when value="19_0"></when>
-			<when value="101_101"></when>
 		</conditional>
 		<conditional name="naive_output_cond">
 			<param name="naive_output" type="select" label="Output new IMGT archives per class into your history?">

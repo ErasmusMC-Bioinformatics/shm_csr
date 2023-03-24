@@ -163,8 +163,8 @@ if(!all(higher_than, na.rm=T)){ #check for no unmatched
 	result[!higher_than,"best_match"] = paste("unmatched,", result[!higher_than,"best_match"])
 }
 
-if(class.filter == "101_101"){
-	result$best_match = "all"
+if(splt[1] == "101" & splt[2] == "101"){
+	result$best_match = splt[3]
 }
 
 write.table(x=result, file=gsub("merged.txt$", "before_filters.txt", output), sep="\t",quote=F,row.names=F,col.names=T)

@@ -43,11 +43,20 @@ def get_container():
     return container.text
 
 
+def ignore_files(src, files):
+    "Ignore virtualenv and git directories to prevent massive tmp folders"
+    if os.path.basename(src) in (".venv", ".git"):
+        return files
+    return ()
+
 @pytest.fixture(scope="module")
 def shm_csr_result():
     temp_dir = Path(tempfile.mkdtemp())
     tool_dir = temp_dir / "shm_csr"
-    shutil.copytree(GIT_ROOT, tool_dir)
+    shutil.copytree(
+        GIT_ROOT, tool_dir,
+        # Ignore .venv and .git directories.
+        ignore=ignore_files)
     working_dir = temp_dir / "working"
     working_dir.mkdir(parents=True)
     output_dir = temp_dir / "outputs"
