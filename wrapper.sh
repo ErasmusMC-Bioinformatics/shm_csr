@@ -16,11 +16,13 @@ naive_output_cg=${11}
 naive_output_cm=${12}
 naive_output_ce=${13}
 naive_output_all=${14}
-filter_unique=${15}
-filter_unique_count=${16}
-class_filter=${17}
-empty_region_filter=${18}
-fast=${19}
+naive_output_igm_naive=${15}
+naive_output_igm_naive_memory=${16}
+filter_unique=${17}
+filter_unique_count=${18}
+class_filter=${19}
+empty_region_filter=${20}
+fast=${21}
 
 BASENAME=$(basename $input)
 # Cut off .txz or .tgz suffix
@@ -822,6 +824,8 @@ then
 		cp $outdir/${NEW_IMGT_PREFIX}_IGG.txz ${naive_output_cg}
 		cp $outdir/${NEW_IMGT_PREFIX}_IGM.txz ${naive_output_cm}
 		cp $outdir/${NEW_IMGT_PREFIX}_IGE.txz ${naive_output_ce}
+    cp $outdir/${NEW_IMGT_PREFIX}_IGM_NAIVE.txz ${naive_output_igm_naive}
+    cp $outdir/${NEW_IMGT_PREFIX}_IGM_NAIVE_MEMORY.txz ${naive_output_igm_naive_memory}
 	fi
 fi
 
