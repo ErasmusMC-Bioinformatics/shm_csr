@@ -1,3 +1,9 @@
+version 1.8.1
+-----------------
++ Fix a bug where input files with spaces could not be used.
++ Fix a bug were the data format was not properly set for filtered IMGT 
+  archives.
+
 version 1.8.0
 -----------------
 + Add options "Everything is IGA" and "Everything is IGG". 
