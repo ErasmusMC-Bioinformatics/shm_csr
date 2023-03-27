@@ -22,12 +22,13 @@
 	</requirements>
 	<command interpreter="bash">
 		<![CDATA[
-		#set $input=$in_file.name
+		#import os
+		#set $input=os.path.basename($in_file.name)
 		ln -s "$in_file" "$input" &&
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
 			$__tool_directory__/wrapper.sh "$input"
 			custom $out_file $out_file.files_path
-			"${in_file.name}" "-" $functionality $unique
+			"$input" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
 			$naive_output_cm $naive_output_ce $naive_output_all $naive_output_igm_naive
 			$naive_output_igm_naive_memory

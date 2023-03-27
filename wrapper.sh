@@ -23,10 +23,10 @@ filter_unique_count=${18}
 class_filter=${19}
 empty_region_filter=${20}
 fast=${21}
-
-BASENAME=$(basename $input)
-# Cut off .txz or .tgz suffix
+BASENAME=$(basename "$input")
+# Cut off .txz or .tgz suffix and also replace spaces with underscores.
 NEW_IMGT_PREFIX="new_IMGT_${BASENAME%.*}"
+NEW_IMGT_PREFIX=${NEW_IMGT_PREFIX// /_}
 
 #exec 5> debug_output.txt
 #BASH_XTRACEFD="5"
@@ -44,16 +44,16 @@ echo "---------------- read parameters ----------------<br />" > $log
 
 echo "unpacking IMGT file"
 
-type="`file -L $input`"
+type="$(file -L "$input")"
 if [[ "$type" == *"Zip archive"* ]] ; then
 	echo "Zip archive"
 	echo "unzip $input -d $PWD/files/"
-	unzip $input -d $PWD/files/
+	unzip "$input" -d $PWD/files/
 elif [[ "$type" == *"XZ compressed data"* ]] ; then
 	echo "ZX archive"
-	echo "tar -xJf $input -C $PWD/files/"
+	echo "tar -xJf "$input" -C $PWD/files/"
 	mkdir -p "$PWD/files/$title"
-	tar -xJf $input -C "$PWD/files/$title"
+	tar -xJf "$input" -C "$PWD/files/$title"
 else
 	echo "Unrecognized format $type"
 	echo "Unrecognized format $type" > $log
@@ -112,7 +112,7 @@ Rscript $dir/merge_and_filter.r \
 echo "---------------- creating new IMGT zips ----------------"
 echo "---------------- creating new IMGT zips ----------------<br />" >> $log
 
-python $dir/split_imgt_file.py --outdir $outdir $input $outdir/merged.txt \
+python $dir/split_imgt_file.py --outdir $outdir "$input" $outdir/merged.txt \
   --prefix "${NEW_IMGT_PREFIX}" \
   - IGA IGA1 IGA2 IGG IGG1 IGG2 IGG3 IGG4 IGM IGE
 
