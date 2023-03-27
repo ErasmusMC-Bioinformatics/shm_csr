@@ -147,13 +147,13 @@
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
 		</data>
-		<data format="imgt archive" name="naive_output_igm_naive" label = "Filtered naive IGM sequences (mutations below 2%): ${in_file.name}">
+		<data format="imgt_archive" name="naive_output_igm_naive" label = "Filtered naive IGM sequences (mutations below 2%): ${in_file.name}">
 			<filter>naive_output_cond['naive_output'] == "yes"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 		</data>
-		<data format="imgt archive" name="naive_output_igm_naive_memory" label = "Filtered naive memory IGM sequences (mutations over 2%): ${in_file.name}">
+		<data format="imgt_archive" name="naive_output_igm_naive_memory" label = "Filtered naive memory IGM sequences (mutations over 2%): ${in_file.name}">
 			<filter>naive_output_cond['naive_output'] == "yes"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
