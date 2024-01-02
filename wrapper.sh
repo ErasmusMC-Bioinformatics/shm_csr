@@ -23,7 +23,7 @@ filter_unique_count=${18}
 class_filter=${19}
 empty_region_filter=${20}
 fast=${21}
-BASENAME=$(basename "$input")
+BASENAME=$(basename "$title")
 # Cut off .txz or .tgz suffix and also replace spaces with underscores.
 NEW_IMGT_PREFIX="new_IMGT_${BASENAME%.*}"
 NEW_IMGT_PREFIX=${NEW_IMGT_PREFIX// /_}
