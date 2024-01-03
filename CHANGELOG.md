@@ -1,3 +1,7 @@
+version 1.9.0-dev
+-----------------
++ Fix a bug where tar would not open certain filenames.
+
 version 1.8.1
 -----------------
 + Fix a bug where input files with spaces could not be used.
