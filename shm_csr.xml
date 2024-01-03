@@ -24,9 +24,8 @@
 		<![CDATA[
 		#import os
 		#set $input=os.path.basename($in_file.name)
-		ln -s "$in_file" "$input" &&
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
-			$__tool_directory__/wrapper.sh "$input"
+			$__tool_directory__/wrapper.sh "$in_file"
 			custom $out_file $out_file.files_path
 			"$input" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
