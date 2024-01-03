@@ -31,7 +31,7 @@ NEW_IMGT_PREFIX=${NEW_IMGT_PREFIX// /_}
 #exec 5> debug_output.txt
 #BASH_XTRACEFD="5"
 ## Busybox date does not support '+%s.%N'. So use a custom program. Can be
-## Compiled with cc -Os show_time_as_float.c -o show_time_as_float
+## Compiled with cc -static -Os show_time_as_float.c -o show_time_as_float
 #PS4='$(${dir}/show_time_as_float) $LINENO: '
 #set -x
 

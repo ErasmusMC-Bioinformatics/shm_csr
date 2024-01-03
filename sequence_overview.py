@@ -101,7 +101,7 @@ def sequence_overview(before_unique: str,
     sequence_columns = [
         "FR1.IMGT.seq", "CDR1.IMGT.seq", "FR2.IMGT.seq", "CDR2.IMGT.seq",
         "FR3.IMGT.seq", "CDR3.IMGT.seq"]
-    if empty_region_filter == "leader":
+    if empty_region_filter == "leader" or empty_region_filter == "None":
         sequence_columns = sequence_columns
     elif empty_region_filter == "FR1":
         sequence_columns = sequence_columns[1:]

@@ -1,5 +1,6 @@
 version 1.9.0-dev
 -----------------
++ Add a no filter region filter. 
 + Fix a bug where tar would not open certain filenames.
 
 version 1.8.1
