@@ -183,6 +183,7 @@ if(empty.region.filter == "leader"){
 } else if(empty.region.filter == "FR2"){
 	result = result[result$CDR2.IMGT.seq != "" & result$FR3.IMGT.seq != "", ]
 }
+# If empty region filter is None, nothing happens.
 
 print(paste("After removal sequences that are missing a gene region:", nrow(result)))
 filtering.steps = rbind(filtering.steps, c("After removal sequences that are missing a gene region", nrow(result)))
@@ -219,7 +220,7 @@ if(filter.unique != "no"){
 	clmns = names(result)
 	if(filter.unique == "remove_vjaa"){
 		result$unique.def = paste(result$VGene, result$JGene, result$CDR3.IMGT.AA)
-	} else if(empty.region.filter == "leader"){
+	} else if(empty.region.filter == "leader" || empty.region.filter == "None"){
 		result$unique.def = paste(result$FR1.IMGT.seq, result$CDR1.IMGT.seq, result$FR2.IMGT.seq, result$CDR2.IMGT.seq, result$FR3.IMGT.seq, result$CDR3.IMGT.seq)
 	} else if(empty.region.filter == "FR1"){
 		result$unique.def = paste(result$CDR1.IMGT.seq, result$FR2.IMGT.seq, result$CDR2.IMGT.seq, result$FR3.IMGT.seq, result$CDR3.IMGT.seq)

@@ -1,4 +1,4 @@
-<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.8.0" profile="16.04">
+<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.9.0" profile="16.04">
 	<description></description>
 	<requirements>
 		<requirement type="package" version="3.7.1">python</requirement>
@@ -22,12 +22,12 @@
 	</requirements>
 	<command interpreter="bash">
 		<![CDATA[
-		#set $input=$in_file.name
-		ln -s "$in_file" "$input" &&
+		#import os
+		#set $input=os.path.basename($in_file.name)
 		#if str ( $filter_unique.filter_unique_select ) == "remove":
-			$__tool_directory__/wrapper.sh "$input"
+			$__tool_directory__/wrapper.sh "$in_file"
 			custom $out_file $out_file.files_path
-			"${in_file.name}" "-" $functionality $unique
+			"$input" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
 			$naive_output_cm $naive_output_ce $naive_output_all $naive_output_igm_naive
 			$naive_output_igm_naive_memory
@@ -59,6 +59,7 @@
 			<option value="FR1" selected="true">FR1: include CDR1,FR2,CDR2,FR3 in filters</option>
 			<option value="CDR1">CDR1: include FR2,CDR2,FR3 in filters</option>
 			<option value="FR2">FR2: include CDR2,FR3 in filters</option>
+			<option value="None">No filter: sequences with mission regions are not filtered.</option>
 		</param>
 		<param name="functionality" type="select" label="Functionality filter" help="" >
 			<option value="productive" selected="true">Productive (Productive and Productive see comment)</option>
@@ -146,13 +147,13 @@
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
 		</data>
-		<data format="imgt archive" name="naive_output_igm_naive" label = "Filtered naive IGM sequences (mutations below 2%): ${in_file.name}">
+		<data format="imgt_archive" name="naive_output_igm_naive" label = "Filtered naive IGM sequences (mutations below 2%): ${in_file.name}">
 			<filter>naive_output_cond['naive_output'] == "yes"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 		</data>
-		<data format="imgt archive" name="naive_output_igm_naive_memory" label = "Filtered naive memory IGM sequences (mutations over 2%): ${in_file.name}">
+		<data format="imgt_archive" name="naive_output_igm_naive_memory" label = "Filtered naive memory IGM sequences (mutations over 2%): ${in_file.name}">
 			<filter>naive_output_cond['naive_output'] == "yes"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
