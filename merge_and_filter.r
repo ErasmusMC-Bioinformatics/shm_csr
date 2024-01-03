@@ -183,6 +183,7 @@ if(empty.region.filter == "leader"){
 } else if(empty.region.filter == "FR2"){
 	result = result[result$CDR2.IMGT.seq != "" & result$FR3.IMGT.seq != "", ]
 }
+# If empty region filter is None, nothing happens.
 
 print(paste("After removal sequences that are missing a gene region:", nrow(result)))
 filtering.steps = rbind(filtering.steps, c("After removal sequences that are missing a gene region", nrow(result)))

@@ -59,6 +59,7 @@
 			<option value="FR1" selected="true">FR1: include CDR1,FR2,CDR2,FR3 in filters</option>
 			<option value="CDR1">CDR1: include FR2,CDR2,FR3 in filters</option>
 			<option value="FR2">FR2: include CDR2,FR3 in filters</option>
+			<option value="None">No filter: sequences with mission regions are not filtered.</option>
 		</param>
 		<param name="functionality" type="select" label="Functionality filter" help="" >
 			<option value="productive" selected="true">Productive (Productive and Productive see comment)</option>
