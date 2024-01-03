@@ -2,13 +2,20 @@ import argparse
 import logging
 import sys
 import os
+import traceback
 import typing
 from typing import Optional
 
 from collections import defaultdict
 
-REGION_FILTERS = ("leader", "FR1", "CDR1", "FR2", "CDR2")
+REGION_FILTERS = ("leader", "FR1", "CDR1", "FR2", "CDR2", "None")
 
+
+def int_or_zero(value: typing.Any):
+	try:
+		return int(value)
+	except ValueError:
+		return 0
 
 class Mutation(typing.NamedTuple):
 	"""Represent a mutation type as a tuple"""
@@ -177,15 +184,15 @@ def main():
 			mutationList += mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
 			mutationListByID[ID] = mutationdic[ID + "_FR1"] + mutationdic[ID + "_CDR1"] + mutationdic[ID + "_FR2"] + mutationdic[ID + "_CDR2"] + mutationdic[ID + "_FR3"]
 
-			fr1Length = int(linesplt[fr1LengthIndex])
-			fr2Length = int(linesplt[fr2LengthIndex])
-			fr3Length = int(linesplt[fr3LengthIndex])
-			cdr1Length = int(linesplt[cdr1LengthIndex])
-			cdr2Length = int(linesplt[cdr2LengthIndex])
+			fr1Length = int_or_zero(linesplt[fr1LengthIndex])
+			fr2Length = int_or_zero(linesplt[fr2LengthIndex])
+			fr3Length = int_or_zero(linesplt[fr3LengthIndex])
+			cdr1Length = int_or_zero(linesplt[cdr1LengthIndex])
+			cdr2Length = int_or_zero(linesplt[cdr2LengthIndex])
 			LengthDic[ID] = (fr1Length, cdr1Length, fr2Length, cdr2Length, fr3Length)
 
-			cdr1AALengthDic[ID] = int(linesplt[cdr1AALengthIndex])
-			cdr2AALengthDic[ID] = int(linesplt[cdr2AALengthIndex])
+			cdr1AALengthDic[ID] = int_or_zero(linesplt[cdr1AALengthIndex])
+			cdr2AALengthDic[ID] = int_or_zero(linesplt[cdr2AALengthIndex])
 
 			IDlist += [ID]
 	print("len(mutationdic) =", len(mutationdic))
@@ -222,6 +229,8 @@ def main():
 		# We determine the position to start summing below.
 		# This returns 0 for leader, 1 for FR1 etc.
 		length_start_pos = REGION_FILTERS.index(empty_region_filter)
+		if empty_region_filter == "None":
+			length_start_pos = 0
 
 		o.write("Sequence.ID\tnumber_of_mutations\tnumber_of_tandems\tregion_length\texpected_tandems\tlongest_tandem\ttandems\n")
 		for ID in IDlist:

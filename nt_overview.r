@@ -17,7 +17,7 @@ hotspot.analysis.sum = read.table(hotspot.analysis.sum.file, header=F, sep=",", 
 
 NToverview = merged
 
-if(empty.region.filter == "leader"){
+if(empty.region.filter == "leader" || empty.region.filter == "None"){
 	NToverview$seq = paste(NToverview$FR1.IMGT.seq, NToverview$CDR1.IMGT.seq, NToverview$FR2.IMGT.seq, NToverview$CDR2.IMGT.seq, NToverview$FR3.IMGT.seq)
 } else if(empty.region.filter == "FR1"){
 	NToverview$seq = paste(NToverview$CDR1.IMGT.seq, NToverview$FR2.IMGT.seq, NToverview$CDR2.IMGT.seq, NToverview$FR3.IMGT.seq)
