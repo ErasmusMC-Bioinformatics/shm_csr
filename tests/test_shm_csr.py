@@ -84,7 +84,8 @@ def shm_csr_result():
     # anyway and take most of the test time to execute. The environment
     # variable can be set to "no" on the CI so the code path is tested
     # at the time a PR is ready.
-    fast = os.environ.get("SHM_CSR_FAST", "yes")
+    run_changeo = "yes" if os.environ.get("SHM_CSR_FAST") == "no" else "no"
+    run_baseline = "yes" if os.environ.get("SHM_CSR_FAST") == "no" else "no"
     cmd = [
         "bash",
         wrapper,
@@ -108,7 +109,8 @@ def shm_csr_result():
         filter_unique_count,
         class_filter,
         empty_region_filter,
-        fast
+        run_changeo,
+        run_baseline
     ]
     docker_cmd = ["docker", "run", "-v", f"{temp_dir}:{temp_dir}",
                   "--rm",  # Remove container after running

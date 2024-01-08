@@ -35,7 +35,7 @@
 			$filter_unique.filter_unique_clone_count
 			$class_filter_cond.class_filter
 			$empty_region_filter
-			$fast
+			$changeo $baseline
 		#else:
 			$__tool_directory__/wrapper.sh "$in_file"
 			custom
@@ -48,7 +48,7 @@
 			2
 			$class_filter_cond.class_filter
 			$empty_region_filter
-			$fast
+			$changeo $baseline
 		#end if
 	]]>
 	</command>
@@ -111,8 +111,10 @@
 			<param name="naive_output" type="boolean" label="Output new IMGT archives per class into your history?"
 				   checked="no" truevalue="yes" falsevalue="no"/>
 			</conditional>
-		<param name="fast" type="boolean" label="Fast" help="Skips Change-O/Baseline"
-			   checked="no" truevalue="yes" falsevalue="no"/>
+		<param name="changeo" type="boolean" label="Change-O" help="Run Change-O"
+			   checked="yes" truevalue="yes" falsevalue="no"/>
+		<param name="baseline" type="boolean" label="Baseline" help="Run Baseline"
+			   checked="yes" truevalue="yes" falsevalue="no"/>
 	</inputs>
 	<outputs>
 		<data format="html" name="out_file" label = "SHM &amp; CSR on ${in_file.name}"/>

@@ -22,7 +22,8 @@ filter_unique=${17}
 filter_unique_count=${18}
 class_filter=${19}
 empty_region_filter=${20}
-fast=${21}
+run_changeo=${21}
+run_baseline=${22}
 BASENAME=$(basename "$title")
 # Cut off .txz or .tgz suffix and also replace spaces with underscores.
 NEW_IMGT_PREFIX="new_IMGT_${BASENAME%.*}"
@@ -410,7 +411,7 @@ count_imgt_lines () {
   rm 1_Summary.txt
 }
 
-if [[ "$fast" == "no" ]] ; then
+if [[ "$run_baseline" == "yes" ]] ; then
 
     
 
@@ -524,7 +525,7 @@ cat $dir/shm_csr.htm >> $output
 
 echo "</div>" >> $output #CSR tab end
 
-if [[ "$fast" == "no" ]] ; then
+if [[ "$run_changeo" == "yes" ]] ; then
 
 	echo "---------------- change-o MakeDB ----------------"
 
