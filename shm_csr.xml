@@ -1,4 +1,4 @@
-<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.9.0" profile="16.04">
+<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.9.1" profile="16.04">
 	<description></description>
 	<requirements>
 		<requirement type="package" version="3.7.1">python</requirement>
@@ -37,8 +37,8 @@
 			$empty_region_filter
 			$fast
 		#else:
-			$__tool_directory__/wrapper.sh
-			"$input" custom
+			$__tool_directory__/wrapper.sh "$in_file"
+			custom
 			$out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg

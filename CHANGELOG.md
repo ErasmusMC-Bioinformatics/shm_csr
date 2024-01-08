@@ -1,3 +1,7 @@
+version 1.9.1
+-----------------
++ Fix error in launch command.
+
 version 1.9.0
 -----------------
 + Add a no filter region filter. 
