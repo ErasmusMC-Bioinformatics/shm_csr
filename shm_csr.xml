@@ -108,17 +108,11 @@
 			</param>
 		</conditional>
 		<conditional name="naive_output_cond">
-			<param name="naive_output" type="select" label="Output new IMGT archives per class into your history?">
-				<option value="yes">Yes</option>
-				<option value="no" selected="true">No</option>
-			</param>
-			<when value="yes"></when>
-			<when value="no"></when>
-		</conditional>
-		<param name="fast" type="select" label="Fast" help="Skips Change-O/Baseline" >
-			<option value="yes">Yes</option>
-			<option value="no" selected="true">No</option>
-		</param>
+			<param name="naive_output" type="boolean" label="Output new IMGT archives per class into your history?"
+				   checked="no" truevalue="yes" falsevalue="no"/>
+			</conditional>
+		<param name="fast" type="boolean" label="Fast" help="Skips Change-O/Baseline"
+			   checked="no" truevalue="yes" falsevalue="no"/>
 	</inputs>
 	<outputs>
 		<data format="html" name="out_file" label = "SHM &amp; CSR on ${in_file.name}"/>
