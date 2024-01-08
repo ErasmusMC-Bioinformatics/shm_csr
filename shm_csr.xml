@@ -37,8 +37,8 @@
 			$empty_region_filter
 			$fast
 		#else:
-			$__tool_directory__/wrapper.sh
-			"$input" custom
+			$__tool_directory__/wrapper.sh "$in_file"
+			custom
 			$out_file $out_file.files_path
 			"${in_file.name}" "-" $functionality $unique
 			$naive_output_cond.naive_output $naive_output_ca $naive_output_cg
