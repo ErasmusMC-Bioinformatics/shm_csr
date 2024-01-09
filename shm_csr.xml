@@ -111,9 +111,9 @@
 			<param name="naive_output" type="boolean" label="Output new IMGT archives per class into your history?"
 				   checked="no" truevalue="yes" falsevalue="no"/>
 			</conditional>
-		<param name="changeo" type="boolean" label="Change-O" help="Run Change-O"
+		<param name="changeo" type="boolean" label="Run Change-O"
 			   checked="yes" truevalue="yes" falsevalue="no"/>
-		<param name="baseline" type="boolean" label="Baseline" help="Run Baseline"
+		<param name="baseline" type="boolean" label="Run Baseline"
 			   checked="yes" truevalue="yes" falsevalue="no"/>
 	</inputs>
 	<outputs>
