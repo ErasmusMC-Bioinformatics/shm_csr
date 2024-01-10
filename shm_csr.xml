@@ -114,7 +114,9 @@
 		<param name="changeo" type="boolean" label="Run Change-O"
 			   checked="yes" truevalue="yes" falsevalue="no"/>
 		<param name="baseline" type="boolean" label="Run Baseline"
-			   checked="yes" truevalue="yes" falsevalue="no"/>
+			   checked="yes" truevalue="yes" falsevalue="no"
+			   help="Baseline is automatically skipped when functionality filter is set to unproductive only."
+		/>
 	</inputs>
 	<outputs>
 		<data format="html" name="out_file" label = "SHM &amp; CSR on ${in_file.name}"/>

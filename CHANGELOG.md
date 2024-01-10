@@ -1,5 +1,6 @@
 version 1.10.0-dev
 ------------------
++ Prevent running baseline when only unproductive sequences are present.
 + Replace "fast" option with options to toggle baseline and Change-O indidually.
 
 version 1.9.1

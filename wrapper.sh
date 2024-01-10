@@ -411,7 +411,8 @@ count_imgt_lines () {
   rm 1_Summary.txt
 }
 
-if [[ "$run_baseline" == "yes" ]] ; then
+# Baseline only works on productive sequences.
+if [[ "$run_baseline" == "yes" && "$functionality" != "unproductive" ]] ; then
 
     
 
