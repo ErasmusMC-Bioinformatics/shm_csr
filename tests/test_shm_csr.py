@@ -165,3 +165,16 @@ def test_nt_overview(shm_csr_result):
                   ) as validate_h:
             for line in result_h:
                 assert line == validate_h.readline()
+
+
+def test_baseline_succeeds():
+    run_shm_csr(
+        functionality="unproductive",
+        empty_region_filter="None",
+        filter_unique="no",
+        unique="VGene,DGene,JGene,CDR3.IMGT.seq",
+        class_filter="101_101_IGA",
+        naive_output="yes",
+        run_baseline="yes",
+        run_changeo="yes",
+    )
