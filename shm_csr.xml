@@ -1,4 +1,4 @@
-<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.9.1" profile="16.04">
+<tool id="shm_csr" name="SHM &amp; CSR pipeline" version="1.10.0-dev" profile="16.04">
 	<description></description>
 	<requirements>
 		<requirement type="package" version="3.7.1">python</requirement>
@@ -35,7 +35,7 @@
 			$filter_unique.filter_unique_clone_count
 			$class_filter_cond.class_filter
 			$empty_region_filter
-			$fast
+			$changeo $baseline
 		#else:
 			$__tool_directory__/wrapper.sh "$in_file"
 			custom
@@ -48,7 +48,7 @@
 			2
 			$class_filter_cond.class_filter
 			$empty_region_filter
-			$fast
+			$changeo $baseline
 		#end if
 	]]>
 	</command>
@@ -108,59 +108,55 @@
 			</param>
 		</conditional>
 		<conditional name="naive_output_cond">
-			<param name="naive_output" type="select" label="Output new IMGT archives per class into your history?">
-				<option value="yes">Yes</option>
-				<option value="no" selected="true">No</option>
-			</param>
-			<when value="yes"></when>
-			<when value="no"></when>
-		</conditional>
-		<param name="fast" type="select" label="Fast" help="Skips Change-O/Baseline" >
-			<option value="yes">Yes</option>
-			<option value="no" selected="true">No</option>
-		</param>
+			<param name="naive_output" type="boolean" label="Output new IMGT archives per class into your history?"
+				   checked="no" truevalue="yes" falsevalue="no"/>
+			</conditional>
+		<param name="changeo" type="boolean" label="Run Change-O"
+			   checked="yes" truevalue="yes" falsevalue="no"/>
+		<param name="baseline" type="boolean" label="Run Baseline"
+			   checked="yes" truevalue="yes" falsevalue="no"/>
 	</inputs>
 	<outputs>
 		<data format="html" name="out_file" label = "SHM &amp; CSR on ${in_file.name}"/>
 		<data format="imgt_archive" name="naive_output_ca" label = "Filtered IMGT IGA: ${in_file.name}" >
-		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>naive_output_cond['naive_output'] is True</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_cg" label = "Filtered IMGT IGG: ${in_file.name}" >
-		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>naive_output_cond['naive_output'] is True</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_cm" label = "Filtered IMGT IGM: ${in_file.name}" >
-		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>naive_output_cond['naive_output'] is True</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_ce" label = "Filtered IMGT IGE: ${in_file.name}" >
-		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>naive_output_cond['naive_output'] is True</filter>
 		    <filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGM"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_igm_naive" label = "Filtered naive IGM sequences (mutations below 2%): ${in_file.name}">
-			<filter>naive_output_cond['naive_output'] == "yes"</filter>
+			<filter>naive_output_cond['naive_output'] is True</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_igm_naive_memory" label = "Filtered naive memory IGM sequences (mutations over 2%): ${in_file.name}">
-			<filter>naive_output_cond['naive_output'] == "yes"</filter>
+			<filter>naive_output_cond['naive_output'] is True</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGA"</filter>
 			<filter>class_filter_cond['class_filter'] != "101_101_IGG"</filter>
 		</data>
 		<data format="imgt_archive" name="naive_output_all" label = "Filtered IMGT all: ${in_file.name}" >
-		    <filter>naive_output_cond['naive_output'] == "yes"</filter>
+		    <filter>naive_output_cond['naive_output'] is True</filter>
 		    <filter>class_filter_cond['class_filter'] == "101_101"</filter>
 		</data>
 	</outputs>
